@@ -1,0 +1,66 @@
+rules:
+  - id: clabe_to_spei
+    description: "Creditor alias is a CLABE (18 digits) → route to SPEI"
+    priority: 10
+    conditions:
+      - field: canonical.creditor.alias_type
+        operator: eq
+        value: CLABE
+    action:
+      destination_rail: SPEI
+      queue: route.spei
+
+  - id: cpf_to_pix
+    description: "Creditor alias is a CPF (11 digits) → route to PIX"
+    priority: 10
+    conditions:
+      - field: canonical.creditor.alias_type
+        operator: in
+        value: [CPF, CNPJ, EVP]
+    action:
+      destination_rail: PIX
+      queue: route.pix
+
+  - id: phone_br_to_pix
+    description: "Creditor alias is a Brazilian phone (+55) → route to PIX"
+    priority: 20
+    conditions:
+      - field: canonical.creditor.alias_type
+        operator: eq
+        value: PHONE
+      - field: canonical.creditor.alias
+        operator: starts_with
+        value: "+55"
+    action:
+      destination_rail: PIX
+      queue: route.pix
+
+  - id: phone_mx_to_spei
+    description: "Creditor alias is a Mexican phone (+52) → route to SPEI"
+    priority: 20
+    conditions:
+      - field: canonical.creditor.alias_type
+        operator: eq
+        value: PHONE_MX
+      - field: canonical.creditor.alias
+        operator: starts_with
+        value: "+52"
+    action:
+      destination_rail: SPEI
+      queue: route.spei
+
+  - id: email_to_pix
+    description: "Creditor alias is an email → default route to PIX (BR-centric PoC assumption)"
+    priority: 30
+    conditions:
+      - field: canonical.creditor.alias_type
+        operator: eq
+        value: EMAIL
+    action:
+      destination_rail: PIX
+      queue: route.pix
+
+defaults:
+  no_match_action: FAIL
+  no_match_error_code: ROUTING_ERROR
+  no_match_message: "No routing rule matched for the given creditor alias"

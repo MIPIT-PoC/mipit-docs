@@ -1,0 +1,490 @@
+openapi: 3.1.0
+info:
+  title: MiPIT — API Unificada
+  version: 0.1.0
+  description: |
+    API del middleware de interoperabilidad para pagos instantáneos transfronterizos.
+    MiPIT orquesta transacciones simuladas entre los rieles PIX (Brasil) y SPEI (México)
+    usando un modelo canónico basado en ISO 20022 pacs.008.
+  contact:
+    name: Equipo MiPIT
+  license:
+    name: MIT
+
+servers:
+  - url: https://mipit.local/api
+    description: Local (via Nginx reverse proxy)
+  - url: http://localhost:8080
+    description: Direct core (development)
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: payments
+    description: Operaciones sobre transacciones de pago
+  - name: health
+    description: Estado del servicio
+  - name: metrics
+    description: Métricas de observabilidad
+
+paths:
+  /payments:
+    post:
+      tags: [payments]
+      summary: Crear una transacción simulada
+      description: |
+        Acepta una solicitud de pago, la valida, traduce al modelo canónico,
+        enruta al adaptador destino y devuelve un resumen con el payment_id.
+        El procesamiento es asíncrono — el estado final se consulta vía GET.
+      operationId: createPayment
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: true
+          description: UUID único para garantizar idempotencia. Reutilizar la misma key con el mismo payload devuelve la respuesta cacheada.
+          schema:
+            type: string
+            format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        - name: X-Trace-ID
+          in: header
+          required: false
+          description: ID de traza para correlación distribuida. Si no se envía, el core genera uno.
+          schema:
+            type: string
+          example: "01HPX9Y3Q9K1Z8G7V3"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePaymentRequest'
+            example:
+              amount: 1500.00
+              currency: "BRL"
+              debtor:
+                alias: "+5511999887766"
+                name: "Maria Silva"
+              creditor:
+                alias: "012180012345678901"
+                name: "Carlos Mejía"
+              purpose: "P2P"
+              reference: "MIPIT-DEMO-001"
+      responses:
+        '202':
+          description: Payment accepted for asynchronous processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentSummary'
+              example:
+                payment_id: "PMT-01HPX9Y3Q9K1Z8G7V2"
+                status: "RECEIVED"
+                received_at: "2026-03-01T15:22:10.000Z"
+                destination: "SPEI"
+        '400':
+          description: Validation error — payload inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error:
+                  code: "VALIDATION_ERROR"
+                  message: "debtor.alias is required"
+                  details:
+                    field: "debtor.alias"
+                    constraint: "required"
+        '401':
+          description: JWT inválido o ausente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Idempotency conflict — misma key con payload diferente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error:
+                  code: "IDEMPOTENCY_CONFLICT"
+                  message: "Idempotency-Key already used with different payload"
+        '422':
+          description: Datos no resolubles (campos hard-required inválidos)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /payments/{payment_id}:
+    get:
+      tags: [payments]
+      summary: Consultar estado y detalle de una transacción
+      description: |
+        Devuelve el estado actual, el payload original, el modelo canónico generado,
+        la traducción al riel destino, el ack del riel (si existe) y timestamps de cada etapa.
+      operationId: getPayment
+      parameters:
+        - name: payment_id
+          in: path
+          required: true
+          description: Identificador único de la transacción (formato PMT-{ulid})
+          schema:
+            type: string
+          example: "PMT-01HPX9Y3Q9K1Z8G7V2"
+      responses:
+        '200':
+          description: Payment detail with full lifecycle
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentDetail'
+        '404':
+          description: Payment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error:
+                  code: "NOT_FOUND"
+                  message: "Payment PMT-01HPX9Y3Q9K1Z8G7V2 not found"
+
+  /payments:
+    get:
+      tags: [payments]
+      summary: Listar transacciones recientes
+      description: Lista paginada de transacciones con filtros opcionales por estado y riel.
+      operationId: listPayments
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/PaymentStatus'
+        - name: destination
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [PIX, SPEI]
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        '200':
+          description: Paginated list of payments
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentListResponse'
+
+  /health:
+    get:
+      tags: [health]
+      summary: Health check
+      description: Verifica que el servicio esté operativo y sus dependencias accesibles.
+      operationId: healthCheck
+      security: []
+      responses:
+        '200':
+          description: Service healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              example:
+                status: "ok"
+                uptime_ms: 123456
+                dependencies:
+                  postgres: "ok"
+                  rabbitmq: "ok"
+
+  /metrics:
+    get:
+      tags: [metrics]
+      summary: Prometheus metrics
+      description: Endpoint de métricas en formato Prometheus text exposition.
+      operationId: getMetrics
+      security: []
+      responses:
+        '200':
+          description: Prometheus text metrics
+          content:
+            text/plain:
+              schema:
+                type: string
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT emitido por el servicio de autenticación del PoC
+
+  schemas:
+    CreatePaymentRequest:
+      type: object
+      required: [amount, debtor, creditor]
+      properties:
+        amount:
+          type: number
+          minimum: 0.01
+          description: Monto de la transacción en la moneda especificada
+        currency:
+          type: string
+          default: "USD"
+          minLength: 3
+          maxLength: 3
+          description: Código ISO 4217 de la moneda (BRL, MXN, USD)
+        debtor:
+          $ref: '#/components/schemas/Party'
+        creditor:
+          $ref: '#/components/schemas/Party'
+        purpose:
+          type: string
+          maxLength: 35
+          default: "P2P"
+          description: Propósito del pago (P2P, B2B, B2P, etc.)
+        reference:
+          type: string
+          maxLength: 140
+          default: "MIPIT-POC"
+          description: Referencia libre para la transacción
+
+    Party:
+      type: object
+      required: [alias]
+      properties:
+        alias:
+          type: string
+          description: |
+            Identificador del participante. Puede ser:
+            - Clave PIX (CPF, teléfono, email, EVP)
+            - CLABE (18 dígitos)
+            - Número de cuenta
+        name:
+          type: string
+          maxLength: 140
+          description: Nombre completo del participante
+
+    PaymentSummary:
+      type: object
+      properties:
+        payment_id:
+          type: string
+          description: Identificador único (formato PMT-{ulid})
+        status:
+          $ref: '#/components/schemas/PaymentStatus'
+        received_at:
+          type: string
+          format: date-time
+        destination:
+          type: string
+          enum: [PIX, SPEI]
+
+    PaymentDetail:
+      type: object
+      properties:
+        payment_id:
+          type: string
+        status:
+          $ref: '#/components/schemas/PaymentStatus'
+        origin:
+          type: string
+          description: Riel de origen detectado (PIX o SPEI)
+        destination:
+          type: string
+          description: Riel de destino determinado por routing engine
+        amount:
+          type: number
+        currency:
+          type: string
+        original:
+          type: object
+          description: Payload original tal como se recibió
+        canonical:
+          $ref: '#/components/schemas/CanonicalPacs008'
+        translated:
+          type: object
+          description: Payload traducido al formato del riel destino
+        rail_ack:
+          type: object
+          nullable: true
+          description: Respuesta del riel destino (null si aún no se recibe)
+          properties:
+            rail_tx_id:
+              type: string
+            status:
+              type: string
+              enum: [ACCEPTED, REJECTED]
+            error:
+              type: object
+              nullable: true
+              properties:
+                code:
+                  type: string
+                message:
+                  type: string
+            raw_response:
+              type: object
+        timestamps:
+          type: object
+          properties:
+            received_at:
+              type: string
+              format: date-time
+            validated_at:
+              type: string
+              format: date-time
+            canonicalized_at:
+              type: string
+              format: date-time
+            routed_at:
+              type: string
+              format: date-time
+            queued_at:
+              type: string
+              format: date-time
+            sent_at:
+              type: string
+              format: date-time
+            acked_at:
+              type: string
+              format: date-time
+            completed_at:
+              type: string
+              format: date-time
+
+    CanonicalPacs008:
+      type: object
+      description: Modelo canónico inspirado en ISO 20022 pacs.008 (Customer Credit Transfer)
+      properties:
+        msg_id:
+          type: string
+          description: Identificador único del mensaje canónico
+        creation_date_time:
+          type: string
+          format: date-time
+        number_of_txs:
+          type: integer
+          default: 1
+        settlement_method:
+          type: string
+          default: "CLRG"
+        instructing_agent:
+          type: string
+          description: BIC o identificador del agente origen
+        instructed_agent:
+          type: string
+          description: BIC o identificador del agente destino
+        debtor:
+          $ref: '#/components/schemas/CanonicalParty'
+        creditor:
+          $ref: '#/components/schemas/CanonicalParty'
+        amount:
+          type: number
+        currency:
+          type: string
+        purpose:
+          type: string
+        remittance_info:
+          type: string
+        source_rail:
+          type: string
+          enum: [PIX, SPEI]
+
+    CanonicalParty:
+      type: object
+      properties:
+        name:
+          type: string
+        alias:
+          type: string
+        alias_type:
+          type: string
+          enum: [CPF, CNPJ, PHONE, EMAIL, EVP, CLABE, PHONE_MX, CARD]
+        account:
+          type: string
+        agent_id:
+          type: string
+
+    PaymentStatus:
+      type: string
+      enum:
+        - RECEIVED
+        - VALIDATED
+        - CANONICALIZED
+        - ROUTED
+        - QUEUED
+        - SENT_TO_DESTINATION
+        - ACKED_BY_RAIL
+        - COMPLETED
+        - FAILED
+        - REJECTED
+        - DUPLICATE
+
+    PaymentListResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentSummary'
+        total:
+          type: integer
+        limit:
+          type: integer
+        offset:
+          type: integer
+
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [ok, degraded, down]
+        uptime_ms:
+          type: integer
+        dependencies:
+          type: object
+          properties:
+            postgres:
+              type: string
+              enum: [ok, down]
+            rabbitmq:
+              type: string
+              enum: [ok, down]
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              description: Código de error del catálogo (ver contracts/error-codes.md)
+            message:
+              type: string
+              description: Descripción legible del error
+            details:
+              type: object
+              nullable: true
+              description: Detalles adicionales (campo, constraint, etc.)
