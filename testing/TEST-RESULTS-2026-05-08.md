@@ -529,3 +529,184 @@ Vía `infra-rabbitmq-connection` del runner del core (check #25):
 ---
 
 **Fin del reporte de resultados — corrida 2026-05-08T18:24:45Z.**
+
+---
+
+# Apéndice A — Corrida de despliegue en VM1 (2026-05-09)
+
+## A.1 Metadatos de la corrida
+
+| Campo | Valor |
+|-------|-------|
+| Fecha de generación | 2026-05-09T16:22:55.834Z (UTC) |
+| Entorno | deployment |
+| Host | VM1 — `estudiante@10.43.101.28` (MIG577) |
+| Base URL del API | `http://localhost:8080` (directo al core, sin nginx) |
+| API alcanzable | sí |
+| Docker disponible | sí |
+| Token JWT emitido | sí |
+| Suite ejecutada | `mipit-testkit/tools/run-validation-suite.ts` (`npm run validate:suite`) |
+| Reporte JSON | `evidence/suite/2026-05-09T16-20-01-805Z/validation-suite-report.json` |
+| Reporte Markdown | `evidence/suite/2026-05-09T16-20-01-805Z/validation-suite-report.md` |
+
+### Stack durante la corrida
+
+| Servicio | Host:Puerto | Estado |
+|----------|-------------|--------|
+| mipit-core | localhost:8080 | up (healthy) |
+| mipit-postgres | localhost:5432 | up (healthy) |
+| mipit-rabbitmq | localhost:5672 / 15672 | up (healthy) |
+| mipit-jaeger | localhost:4318 / 16686 | up |
+| mipit-grafana | localhost:3000 | up |
+| mipit-prometheus | localhost:9090 | up |
+| mipit-adapter-pix | 10.43.101.29:9001 (mock) / 9101 (health) | up (VM2) |
+| mipit-adapter-spei | 10.43.101.29:9002 (mock) / 9102 (health) | up (VM2) |
+| mipit-adapter-breb | 10.43.101.29:9003 (mock) / 9103 (health) | up (VM2) |
+| nginx | — | no aplica en corrida directa (HTTP al core) |
+
+## A.2 Resultado global
+
+**11/11 escenarios PASSED — 0 FAILED — 0 SKIPPED**
+
+| ID | Categoría | Estado | Duración (ms) |
+|----|-----------|--------|---:|
+| historical-load | historical | PASSED | 0 |
+| historical-routing | historical | PASSED | 0 |
+| historical-verifications | historical | PASSED | 1 |
+| core-validation | core-e2e | PASSED | 3 491 |
+| core-e2e-carlos-simplified | core-e2e | PASSED | 11 851 |
+| core-e2e-carlos-full | core-e2e | PASSED | 7 411 |
+| core-e2e-routing | core-e2e | PASSED | 15 205 |
+| e2e-verifications | e2e | PASSED | 60 220 |
+| e2e-routing-correctness | e2e | PASSED | 29 385 |
+| e2e-load | e2e | PASSED | 5 890 |
+| e2e-benchmark-latency | benchmark | PASSED | 40 379 |
+
+## A.3 Métricas detalladas
+
+### core-validation (28 checks sintéticos)
+
+| Métrica | Valor |
+|---------|-------|
+| Checks totales | 28 |
+| Passed | 28 |
+| Failed | 0 |
+| Warnings | 0 |
+| Skipped | 0 |
+
+> Nota: en la corrida local del 2026-05-08 hubo 1 warning en `payment-pix-happy-path` por rechazo del mock. En esta corrida de despliegue los 28 checks pasaron limpiamente.
+
+### core-e2e-carlos-simplified
+
+| Métrica | Valor |
+|---------|-------|
+| Tests passed | 12 |
+| Tests failed | 0 |
+| Tests total | 12 |
+
+### core-e2e-carlos-full
+
+| Métrica | Valor |
+|---------|-------|
+| Tests passed | 11 |
+| Tests failed | 0 |
+| Tests total | 11 |
+
+### core-e2e-routing
+
+| Métrica | Valor |
+|---------|-------|
+| Tests passed | 9 |
+| Tests failed | 0 |
+| Tests total | 9 |
+
+### e2e-verifications (8 grupos, 76 aserciones)
+
+| Métrica | Valor |
+|---------|-------|
+| Assertions passed | 76 |
+| Assertions failed | 0 |
+| Assertions total | 76 |
+
+### e2e-routing-correctness (999 pagos)
+
+| Métrica | Valor |
+|---------|-------|
+| Pagos verificados | 999 |
+| Correctamente ruteados | 999 |
+| Mal ruteados | 0 |
+| Perdidos | 0 |
+| Precisión de routing | 100 % |
+
+### e2e-load (500 pagos, concurrencia 25)
+
+| Métrica | Valor |
+|---------|-------|
+| Pagos enviados | 500 |
+| Exitosos | 500 |
+| Fallidos | 0 |
+| Success rate | 100 % |
+| Throughput | 86 req/s |
+| Latencia p50 | 251 ms |
+| Latencia p95 | 327 ms |
+| Latencia p99 | 417 ms |
+
+### e2e-benchmark-latency (30 s por endpoint, warmup 10 s)
+
+| Endpoint | Requests | Errores | Avg (ms) | p95 (ms) | p99 (ms) |
+|----------|---:|---:|---:|---:|---:|
+| POST /payments | 297 | 0 | 119 | 158 | 179 |
+| POST /translate/preview | 1 120 | 0 | 25 | 39 | 45 |
+| POST /translate | 1 210 | 0 | 21 | 32 | 38 |
+| GET /payments/:id | 1 320 | 447* | 20 | 35 | 42 |
+
+> \* Los 447 errores en `GET /payments/:id` son 404 esperados: el benchmark usa IDs aleatorios que mayormente no existen. No es fallo del sistema.
+
+## A.4 Causa raíz de los 5 escenarios que fallaban antes de la corrida
+
+Los escenarios `core-validation`, `core-e2e-carlos-simplified`, `core-e2e-carlos-full`, `core-e2e-routing` y `e2e-verifications` retornaban HTTP 500 en toda operación de creación de pago (`POST /payments`). El log del core mostraba:
+
+```
+DatabaseError: column "compensated_at" does not exist
+at PaymentRepository.updateStatus
+at PaymentPipeline.execute
+```
+
+**Causa:** el volumen PostgreSQL de VM1 fue inicializado con `db/init/001_schema.sql` (que no incluye `compensated_at` ni `dead_letter_at`) y las migraciones `004_webhooks.sql` y `005_resilience.sql` nunca habían sido aplicadas al volumen existente.
+
+**Corrección aplicada (un solo comando por migración):**
+
+```bash
+docker exec -i mipit-postgres psql -U mipit -d mipit < db/migrations/004_webhooks.sql
+docker exec -i mipit-postgres psql -U mipit -d mipit < db/migrations/005_resilience.sql
+```
+
+Ambas migraciones son idempotentes (`IF NOT EXISTS` / `ADD COLUMN IF NOT EXISTS`). El volumen de datos preexistente (6 837 pagos históricos) se conservó íntegro.
+
+## A.5 Comparación local vs. despliegue
+
+| Métrica | Local (2026-05-08) | VM1 (2026-05-09) |
+|---------|-------------------|-----------------|
+| Resultado global | 11/11 PASSED | 11/11 PASSED |
+| Core checks | 27 pass + 1 warning | **28/28 pass** |
+| Carlos simplified | 12/12 | 12/12 |
+| Carlos full | 11/11 | 11/11 |
+| Routing tests | 9/9 | 9/9 |
+| E2E verifications | 76/76 | 76/76 |
+| Routing correctness | 999/999 (100%) | 999/999 (100%) |
+| Load — throughput | 95 req/s | 86 req/s |
+| Load — p95 | 982 ms | 327 ms |
+| Benchmark POST /payments avg | 95 ms | 119 ms |
+| Benchmark POST /payments p95 | 236 ms | 158 ms |
+
+> Las diferencias de latencia reflejan el hardware del entorno (VM1 tiene recursos asignados por la universidad vs. Docker Desktop en Windows). El p95 de load es mejor en VM1 (327 ms) porque el stack corre nativo en Linux sin la capa de virtualización de Docker Desktop.
+
+## A.6 Limitaciones de esta corrida
+
+1. `BASE_URL=http://localhost:8080` — se atacó el core directamente. nginx (puerto 443) no se incluyó en el path de prueba porque el cert TLS autofirmado de VM1 requiere `ALLOW_INVALID_CERTS=true` y añade latencia de TLS al benchmark que sesga la comparación.
+2. `RUN_REPO_TESTS=false` — igual que en local; los jest internos de adapters/ui siguen con drift conocido.
+3. `RUN_RESILIENCE=false` — los scripts de resiliencia (`e2e-resilience.mjs`, `e2e-retry-timeout.mjs`) no se corren en el entorno compartido de la universidad para no afectar servicios de otros.
+
+---
+
+**Fin del apéndice — corrida de despliegue 2026-05-09T16:22:55Z (VM1 · MIG577).**
