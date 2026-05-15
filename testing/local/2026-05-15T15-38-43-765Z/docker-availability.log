@@ -1,0 +1,25 @@
+# command
+docker ps
+
+# workdir
+C:\Users\nicog\Documents\Tesis\mipit-testkit
+
+# stdout
+CONTAINER ID   IMAGE                                         COMMAND                   CREATED          STATUS                          PORTS                                                                                          NAMES
+b3bee3c45be3   ghcr.io/mipit-poc/mipit-ui:latest             "docker-entrypoint.s…"    7 minutes ago    Up 7 minutes                    0.0.0.0:3001->3000/tcp, [::]:3001->3000/tcp                                                    mipit-ui
+dd15525d0147   ghcr.io/mipit-poc/mipit-adapter-pix:latest    "docker-entrypoint.s…"    7 minutes ago    Up 7 minutes                    0.0.0.0:9001->9001/tcp, [::]:9001->9001/tcp, 0.0.0.0:9101->9101/tcp, [::]:9101->9101/tcp       mipit-adapter-pix
+2f6a9e62f4ae   ghcr.io/mipit-poc/mipit-core:latest           "docker-entrypoint.s…"    7 minutes ago    Up 7 minutes                    0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp                                                    mipit-core
+f0da86daee64   ghcr.io/mipit-poc/mipit-adapter-breb:latest   "docker-entrypoint.s…"    7 minutes ago    Up 7 minutes                    0.0.0.0:9003->9003/tcp, [::]:9003->9003/tcp, 0.0.0.0:9103->9103/tcp, [::]:9103->9103/tcp       mipit-adapter-breb
+a8a87a1424af   ghcr.io/mipit-poc/mipit-adapter-spei:latest   "docker-entrypoint.s…"    7 minutes ago    Up 7 minutes                    0.0.0.0:9002->9002/tcp, [::]:9002->9002/tcp, 0.0.0.0:9102->9102/tcp, [::]:9102->9102/tcp       mipit-adapter-spei
+ca26943825b4   postgres:16-alpine                            "docker-entrypoint.s…"    13 minutes ago   Up 13 minutes (healthy)         0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp                                                    mipit-postgres
+fa1fab677bed   kapwork_auth-auth-api                         "sh -c '\n  ls /app -…"   22 hours ago     Up 2 hours (healthy)            0.0.0.0:8001->8001/tcp, [::]:8001->8001/tcp                                                    kapwork_auth_api
+cbeb6daa8207   supertokens/supertokens-postgresql:11         "docker-entrypoint.s…"    22 hours ago     Up 2 hours (healthy)            0.0.0.0:1235->1235/tcp, [::]:1235->1235/tcp                                                    kapwork_auth_supertokens
+03a15686beba   postgres:16                                   "docker-entrypoint.s…"    22 hours ago     Up 2 hours (healthy)            0.0.0.0:5433->5432/tcp, [::]:5433->5432/tcp                                                    kapwork_auth_db
+6241ae2a5032   dpage/pgadmin4:latest                         "/entrypoint.sh"          22 hours ago     Up 2 hours                      0.0.0.0:5050->80/tcp, [::]:5050->80/tcp                                                        kapwork-pgadmin
+d85915546c78   postgres:15-alpine                            "docker-entrypoint.s…"    22 hours ago     Up 2 hours (healthy)            127.0.0.1:5434->5432/tcp                                                                       kapwork-postgres
+68ae98e246b8   redis:7-alpine                                "docker-entrypoint.s…"    22 hours ago     Up 2 hours (healthy)            127.0.0.1:6380->6379/tcp                                                                       kapwork-redis
+dba13400a536   nginx:1.25-alpine                             "/docker-entrypoint.…"    6 days ago       Restarting (1) 49 seconds ago                                                                                                  mipit-nginx
+f01a6ecb7658   prom/prometheus:v2.51.0                       "/bin/prometheus --c…"    6 days ago       Up 13 minutes                   0.0.0.0:9090->9090/tcp, [::]:9090->9090/tcp                                                    mipit-prometheus
+c2472a68dfaf   grafana/grafana:11.0.0                        "/run.sh"                 6 days ago       Up 13 minutes                   0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp                                                    mipit-grafana
+96b766be21b8   rabbitmq:3.13-management-alpine               "docker-entrypoint.s…"    5 weeks ago      Up 13 minutes (healthy)         0.0.0.0:5672->5672/tcp, [::]:5672->5672/tcp, 0.0.0.0:15672->15672/tcp, [::]:15672->15672/tcp   mipit-rabbitmq
+e4e1d5443568   jaegertracing/all-in-one:1.56                 "/go/bin/all-in-one-…"    5 weeks ago      Up 13 minutes                   0.0.0.0:4318->4318/tcp, [::]:4318->4318/tcp, 0.0.0.0:16686->16686/tcp, [::]:16686->16686/tcp   mipit-jaeger

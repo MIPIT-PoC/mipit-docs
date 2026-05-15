@@ -1,0 +1,512 @@
+{
+  "generated_at": "2026-05-15T15:38:47.302Z",
+  "mode": "local",
+  "target": {
+    "protocol": "http",
+    "host": "localhost",
+    "port": 8080,
+    "base_url": "http://localhost:8080"
+  },
+  "summary": {
+    "total": 28,
+    "passed": 28,
+    "failed": 0,
+    "warnings": 0,
+    "skipped": 0,
+    "critical_failures": 0
+  },
+  "checks": [
+    {
+      "id": "core-health",
+      "category": "access",
+      "title": "Health endpoint responds 200",
+      "critical": true,
+      "status": "passed",
+      "duration_ms": 42,
+      "evidence": {
+        "status": "ok",
+        "uptime": 469,
+        "version": "0.1.0"
+      }
+    },
+    {
+      "id": "core-metrics",
+      "category": "observability",
+      "title": "Metrics endpoint is reachable",
+      "critical": false,
+      "status": "passed",
+      "duration_ms": 18,
+      "evidence": {
+        "contains_mipit_metrics": true,
+        "sample": "# HELP process_cpu_user_seconds_total Total user CPU time spent in seconds.\n# TYPE process_cpu_user_seconds_total counter\nprocess_cpu_user_seconds_total 15.347517000000002\n\n# HELP process_cpu_system_s"
+      }
+    },
+    {
+      "id": "auth-token",
+      "category": "security",
+      "title": "Demo auth token can be issued for UI and tests",
+      "critical": true,
+      "status": "passed",
+      "duration_ms": 20,
+      "evidence": {
+        "token_prefix": "eyJhbGciOiJIUzI1NiIsInR5",
+        "token_length": 171
+      }
+    },
+    {
+      "id": "translate-rails",
+      "category": "routing",
+      "title": "Supported rails catalog is available",
+      "critical": false,
+      "status": "passed",
+      "duration_ms": 38,
+      "evidence": {
+        "totalRails": 7,
+        "railIds": [
+          "PIX",
+          "SPEI",
+          "SWIFT_MT103",
+          "ISO20022_MX",
+          "ACH_NACHA",
+          "FEDNOW",
+          "BRE_B"
+        ]
+      }
+    },
+    {
+      "id": "translate-preview",
+      "category": "translation",
+      "title": "Translate preview returns canonical plus parallel translations",
+      "critical": false,
+      "status": "passed",
+      "duration_ms": 92,
+      "evidence": {
+        "sourceRail": "PIX",
+        "translationTargets": [
+          "SPEI",
+          "SWIFT_MT103",
+          "ISO20022_MX",
+          "ACH_NACHA",
+          "FEDNOW",
+          "BRE_B"
+        ]
+      }
+    },
+    {
+      "id": "translate-direct",
+      "category": "translation",
+      "title": "Direct translate endpoint converts PIX payload into SPEI format",
+      "critical": false,
+      "status": "passed",
+      "duration_ms": 43,
+      "evidence": {
+        "sourceRail": "PIX",
+        "destinationRail": "SPEI",
+        "hasCanonical": true,
+        "translatedKeys": [
+          "claveRastreo",
+          "clabe",
+          "monto",
+          "moneda",
+          "nombreOrdenante",
+          "cuentaOrdenante",
+          "nombreBeneficiario",
+          "cuentaBeneficiario",
+          "concepto",
+          "referencia",
+          "fechaOperacion"
+        ]
+      }
+    },
+    {
+      "id": "validation-invalid-clabe",
+      "category": "validation",
+      "title": "Invalid CLABE is rejected with 400",
+      "critical": true,
+      "status": "passed",
+      "duration_ms": 26,
+      "evidence": {
+        "code": "VALIDATION_ERROR",
+        "message": "Invalid request payload",
+        "details": {
+          "debtor": [
+            "debtor SPEI alias must be a valid 18-digit CLABE (SPEI-XXXXXXXXXXXXXXXXXX)"
+          ],
+          "purpose": [
+            "String must contain at most 35 character(s)"
+          ]
+        },
+        "trace_id": "01KRP4MGQYF79PDZZ6M3B1X6VN"
+      }
+    },
+    {
+      "id": "validation-negative-amount",
+      "category": "validation",
+      "title": "Negative amount is rejected with 400",
+      "critical": true,
+      "status": "passed",
+      "duration_ms": 24,
+      "evidence": {
+        "code": "VALIDATION_ERROR",
+        "message": "Invalid request payload",
+        "details": {
+          "amount": [
+            "Amount must be greater than 0"
+          ]
+        },
+        "trace_id": "01KRP4MGRR1SJF671P5616AHRD"
+      }
+    },
+    {
+      "id": "auth-required",
+      "category": "security",
+      "title": "POST /payments without Bearer token returns 401",
+      "critical": true,
+      "status": "passed",
+      "duration_ms": 19,
+      "evidence": {
+        "code": "UNAUTHORIZED",
+        "message": "Authentication failed: No Authorization was found in request.headers"
+      }
+    },
+    {
+      "id": "payment-pix-happy-path",
+      "category": "communication",
+      "title": "PIX happy path can be accepted, persisted, and queried",
+      "critical": true,
+      "status": "passed",
+      "duration_ms": 700,
+      "evidence": {
+        "attempts": [
+          {
+            "attempt": 1,
+            "payment_id": "PMT-01KRP4MGT6HSZ7TZP9FTGMWCR4",
+            "initial_status": "QUEUED",
+            "final_status": "COMPLETED"
+          }
+        ],
+        "terminal_attempts": 1,
+        "final_status": "COMPLETED",
+        "origin_rail": "PIX",
+        "destination_rail": "PIX"
+      }
+    },
+    {
+      "id": "payment-idempotency-replay",
+      "category": "idempotency",
+      "title": "Same Idempotency-Key returns the same payment_id",
+      "critical": true,
+      "status": "passed",
+      "duration_ms": 87,
+      "evidence": {
+        "idempotency_key": "idem-1778859525621-pahduc",
+        "first_status": 201,
+        "second_status": 201,
+        "payment_id": "PMT-01KRP4MHG4ZYVE21SEFDNY4X8C"
+      }
+    },
+    {
+      "id": "payment-idempotency-conflict",
+      "category": "idempotency",
+      "title": "Same Idempotency-Key with different payload returns conflict",
+      "critical": true,
+      "status": "passed",
+      "duration_ms": 77,
+      "evidence": {
+        "idempotency_key": "idem-conflict-1778859525708-uhhoia",
+        "first_payment_id": "PMT-01KRP4MHJTDCXN1MWVZVEPSPEZ",
+        "second_status": 409,
+        "second_body": {
+          "code": "IDEMPOTENCY_CONFLICT",
+          "message": "Idempotency-Key already used with a different payload"
+        }
+      }
+    },
+    {
+      "id": "payment-detail-traceability",
+      "category": "traceability",
+      "title": "Payment detail exposes trace, audit trail, payloads, and timestamps",
+      "critical": true,
+      "status": "passed",
+      "duration_ms": 102,
+      "evidence": {
+        "payment_id": "PMT-01KRP4MHN68RN511B39CVWBW1N",
+        "trace_id": "01KRP4MHN6Q7QGR74DTRBY53RA",
+        "audit_events": 6,
+        "has_original_payload": true,
+        "has_timestamps": true,
+        "destination_rail": "SPEI"
+      }
+    },
+    {
+      "id": "payments-list",
+      "category": "traceability",
+      "title": "Recent payments endpoint returns at least one payment after traffic",
+      "critical": false,
+      "status": "passed",
+      "duration_ms": 46,
+      "evidence": {
+        "count": 10,
+        "first_payment": {
+          "payment_id": "PMT-01KRP4MHN68RN511B39CVWBW1N",
+          "status": "QUEUED",
+          "origin_rail": "PIX",
+          "destination_rail": "SPEI",
+          "amount": "300.10",
+          "currency": "BRL",
+          "timestamps": {
+            "created_at": "2026-05-15T15:38:45.798Z",
+            "completed_at": null
+          }
+        }
+      }
+    },
+    {
+      "id": "payment-routing-spei",
+      "category": "routing",
+      "title": "SPEI-origin payment is inferred and routed consistently",
+      "critical": true,
+      "status": "passed",
+      "duration_ms": 656,
+      "evidence": {
+        "payment_id": "PMT-01KRP4MHSTC67Q4B1WH5TDRAG2",
+        "origin_rail": "SPEI",
+        "destination_rail": "SPEI",
+        "status": "COMPLETED"
+      }
+    },
+    {
+      "id": "payment-routing-breb",
+      "category": "routing",
+      "title": "BRE_B destination can be inferred from creditor alias",
+      "critical": false,
+      "status": "passed",
+      "duration_ms": 99,
+      "evidence": {
+        "payment_id": "PMT-01KRP4MJEA68FGKMVAQ259FGZB",
+        "origin_rail": "PIX",
+        "destination_rail": "BRE_B",
+        "status": "QUEUED"
+      }
+    },
+    {
+      "id": "payments-concurrency-mini-batch",
+      "category": "load",
+      "title": "Mini-batch of 5 concurrent requests yields 5 unique payment_ids",
+      "critical": false,
+      "status": "passed",
+      "duration_ms": 155,
+      "evidence": {
+        "statuses": [
+          201,
+          201,
+          201,
+          201,
+          201
+        ],
+        "payment_ids": [
+          "PMT-01KRP4MJJECMZEQE5VA1CQ82WG",
+          "PMT-01KRP4MJJG6BJ7FZJCZ70A6KC3",
+          "PMT-01KRP4MJJH6Y0VM79WG0ZFBH35",
+          "PMT-01KRP4MJJPJDM4519K93WS9J5A",
+          "PMT-01KRP4MJJJ928GY5JBSW1J1AE9"
+        ]
+      }
+    },
+    {
+      "id": "analytics-summary",
+      "category": "observability",
+      "title": "Analytics summary endpoint is available",
+      "critical": false,
+      "status": "passed",
+      "duration_ms": 48,
+      "evidence": {
+        "payments": {
+          "total": 14697,
+          "completed": 13251,
+          "failed": 0,
+          "rejected": 1440,
+          "success_rate": 90
+        },
+        "by_rail_keys": [
+          "BRE_B",
+          "PIX",
+          "SPEI"
+        ]
+      }
+    },
+    {
+      "id": "analytics-circuit-breakers",
+      "category": "observability",
+      "title": "Circuit breaker status endpoint is available",
+      "critical": false,
+      "status": "passed",
+      "duration_ms": 15,
+      "evidence": {
+        "breakers": []
+      }
+    },
+    {
+      "id": "analytics-rate-limits",
+      "category": "observability",
+      "title": "Rate limit status endpoint is available",
+      "critical": false,
+      "status": "passed",
+      "duration_ms": 26,
+      "evidence": {
+        "limits_count": 7
+      }
+    },
+    {
+      "id": "analytics-reconciliation",
+      "category": "observability",
+      "title": "Reconciliation report endpoint is available",
+      "critical": false,
+      "status": "passed",
+      "duration_ms": 126,
+      "evidence": {
+        "keys": [
+          "generated_at",
+          "window_hours",
+          "summary",
+          "stuck_payments",
+          "rail_breakdown",
+          "anomalies"
+        ]
+      }
+    },
+    {
+      "id": "sse-clients",
+      "category": "communication",
+      "title": "SSE monitoring endpoint is reachable",
+      "critical": false,
+      "status": "passed",
+      "duration_ms": 14,
+      "evidence": {
+        "connected_clients": 0,
+        "clients": []
+      }
+    },
+    {
+      "id": "webhook-register-list",
+      "category": "communication",
+      "title": "Webhook registration and listing work for a created payment",
+      "critical": false,
+      "status": "passed",
+      "duration_ms": 102,
+      "evidence": {
+        "payment_id": "PMT-01KRP4MJXE6HFSJG5GWTGHX1M4",
+        "registered_webhooks": 1,
+        "latest_webhook": {
+          "id": "a500dead-b912-498c-ba5a-b7bd743de64c",
+          "url": "https://example.com/mipit-webhook",
+          "events": [
+            "COMPLETED",
+            "FAILED",
+            "REJECTED"
+          ],
+          "fired_at": null,
+          "last_http_status": null,
+          "delivery_attempts": 0,
+          "last_error": null,
+          "created_at": "2026-05-15T15:38:47.133Z"
+        }
+      }
+    },
+    {
+      "id": "infra-db-connection",
+      "category": "infrastructure",
+      "title": "PostgreSQL is reachable with configured credentials",
+      "critical": false,
+      "status": "passed",
+      "duration_ms": 15,
+      "evidence": {
+        "db": "mipit",
+        "usr": "mipit",
+        "now": "2026-05-15T15:38:47.184Z"
+      }
+    },
+    {
+      "id": "infra-rabbitmq-connection",
+      "category": "infrastructure",
+      "title": "RabbitMQ is reachable and core queues exist",
+      "critical": false,
+      "status": "passed",
+      "duration_ms": 73,
+      "evidence": {
+        "payments.ack": {
+          "queue": "payments.ack",
+          "messageCount": 0,
+          "consumerCount": 1
+        },
+        "payments.route.pix": {
+          "queue": "payments.route.pix",
+          "messageCount": 2,
+          "consumerCount": 1
+        },
+        "payments.route.spei": {
+          "queue": "payments.route.spei",
+          "messageCount": 0,
+          "consumerCount": 1
+        },
+        "payments.route.breb": {
+          "queue": "payments.route.breb",
+          "messageCount": 0,
+          "consumerCount": 1
+        }
+      }
+    },
+    {
+      "id": "mock-health-pix",
+      "category": "communication",
+      "title": "PIX mock health endpoint responds",
+      "critical": false,
+      "status": "passed",
+      "duration_ms": 14,
+      "evidence": {
+        "status": "ok",
+        "service": "pix-mock-spi",
+        "version": "2.0",
+        "spiWindowOpen": true,
+        "pixNocturnalActive": false,
+        "processedCount": 7,
+        "timestamp": "2026-05-15T15:38:47.267Z"
+      }
+    },
+    {
+      "id": "mock-health-spei",
+      "category": "communication",
+      "title": "SPEI mock health endpoint responds",
+      "critical": false,
+      "status": "passed",
+      "duration_ms": 13,
+      "evidence": {
+        "status": "ok",
+        "service": "spei-mock-cecoban",
+        "version": "3.0",
+        "speiWindowOpen": true,
+        "processedCount": 3,
+        "timestamp": "2026-05-15T15:38:47.281Z"
+      }
+    },
+    {
+      "id": "mock-health-breb",
+      "category": "communication",
+      "title": "BRE_B mock health endpoint responds",
+      "critical": false,
+      "status": "passed",
+      "duration_ms": 14,
+      "evidence": {
+        "status": "ok",
+        "service": "mipit-breb-mock",
+        "version": "1.0",
+        "processedCount": 460,
+        "limits": {
+          "naturalPersonCOP": 20000000,
+          "legalEntityCOP": 200000000
+        },
+        "timestamp": "2026-05-15T15:38:47.293Z"
+      }
+    }
+  ]
+}

@@ -1,0 +1,249 @@
+{
+  "generatedAt": "2026-05-15T15:41:26.439Z",
+  "mode": "local",
+  "environment": {
+    "baseUrl": "http://localhost:8080",
+    "apiReachable": true,
+    "dockerAvailable": true,
+    "tokenIssued": true
+  },
+  "summary": {
+    "total": 11,
+    "passed": 11,
+    "failed": 0,
+    "skipped": 0
+  },
+  "scenarios": [
+    {
+      "id": "historical-load",
+      "title": "Carga histórica de 1000 pagos documentada",
+      "category": "historical",
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 0,
+      "summary": {
+        "source_document": "mipit-docs/testing/testing-completo.md",
+        "script": "mipit-testkit/e2e-load.mjs",
+        "total_sent": 1000,
+        "succeeded": 1000,
+        "failed": 0,
+        "success_rate_pct": 100,
+        "throughput_rps": 30,
+        "latency_p50_ms": 45,
+        "latency_p95_ms": 120,
+        "latency_p99_ms": 250
+      },
+      "notes": [
+        "Resultado histórico documentado, no re-ejecutado en esta corrida."
+      ]
+    },
+    {
+      "id": "historical-routing",
+      "title": "Correctitud histórica de routing de 999 pagos documentada",
+      "category": "historical",
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 0,
+      "summary": {
+        "source_document": "mipit-docs/testing/testing-completo.md",
+        "script": "mipit-testkit/e2e-routing-correctness.mjs",
+        "total_payments": 999,
+        "correctly_routed": 999,
+        "misrouted": 0,
+        "lost": 0,
+        "routing_accuracy_pct": 100
+      },
+      "notes": [
+        "Resultado histórico documentado, no re-ejecutado en esta corrida."
+      ]
+    },
+    {
+      "id": "historical-verifications",
+      "title": "8 verificaciones E2E históricas documentadas",
+      "category": "historical",
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 0,
+      "summary": {
+        "source_document": "mipit-testkit/E2E-VERIFICATION-RESULTS.md",
+        "script": "mipit-testkit/e2e-verifications.mjs",
+        "assertions_passed": 76,
+        "assertions_failed": 0,
+        "assertions_total": 76
+      },
+      "notes": [
+        "Resultado histórico documentado, no re-ejecutado en esta corrida."
+      ]
+    },
+    {
+      "id": "core-validation",
+      "title": "Core validation runner",
+      "category": "core-e2e",
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 3389,
+      "command": "npm.cmd run validate:core",
+      "workdir": "C:\\Users\\nicog\\Documents\\Tesis\\mipit-core",
+      "logPath": "C:\\Users\\nicog\\Documents\\Tesis\\mipit-testkit\\evidence\\suite\\2026-05-15T15-38-43-765Z\\core-validation.log",
+      "summary": {
+        "total_checks": 14697,
+        "passed": 28,
+        "failed": 0,
+        "warnings": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "id": "core-e2e-carlos-simplified",
+      "title": "Carlos - 12 pruebas simplificadas",
+      "category": "core-e2e",
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 10452,
+      "command": "npx.cmd jest test/e2e/error-scenarios-simplified.test.ts --forceExit --detectOpenHandles",
+      "workdir": "C:\\Users\\nicog\\Documents\\Tesis\\mipit-core",
+      "logPath": "C:\\Users\\nicog\\Documents\\Tesis\\mipit-testkit\\evidence\\suite\\2026-05-15T15-38-43-765Z\\core-e2e-carlos-simplified.log",
+      "summary": {
+        "suites_failed": 0,
+        "suites_passed": 1,
+        "suites_total": 1,
+        "tests_failed": 0,
+        "tests_passed": 12,
+        "tests_total": 12
+      }
+    },
+    {
+      "id": "core-e2e-carlos-full",
+      "title": "Carlos - escenarios de error completos",
+      "category": "core-e2e",
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 28823,
+      "command": "npx.cmd jest test/e2e/error-scenarios.test.ts --forceExit --detectOpenHandles",
+      "workdir": "C:\\Users\\nicog\\Documents\\Tesis\\mipit-core",
+      "logPath": "C:\\Users\\nicog\\Documents\\Tesis\\mipit-testkit\\evidence\\suite\\2026-05-15T15-38-43-765Z\\core-e2e-carlos-full.log",
+      "summary": {
+        "suites_failed": 0,
+        "suites_passed": 1,
+        "suites_total": 1,
+        "tests_failed": 0,
+        "tests_passed": 11,
+        "tests_total": 11
+      }
+    },
+    {
+      "id": "core-e2e-routing",
+      "title": "Core - routing e2e",
+      "category": "core-e2e",
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 13960,
+      "command": "npx.cmd jest test/e2e/routing.test.ts --forceExit --detectOpenHandles",
+      "workdir": "C:\\Users\\nicog\\Documents\\Tesis\\mipit-core",
+      "logPath": "C:\\Users\\nicog\\Documents\\Tesis\\mipit-testkit\\evidence\\suite\\2026-05-15T15-38-43-765Z\\core-e2e-routing.log",
+      "summary": {
+        "suites_failed": 0,
+        "suites_passed": 1,
+        "suites_total": 1,
+        "tests_failed": 0,
+        "tests_passed": 9,
+        "tests_total": 9
+      }
+    },
+    {
+      "id": "e2e-verifications",
+      "title": "8 verificaciones E2E",
+      "category": "e2e",
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 58664,
+      "command": "node e2e-verifications.mjs",
+      "workdir": "C:\\Users\\nicog\\Documents\\Tesis\\mipit-testkit",
+      "logPath": "C:\\Users\\nicog\\Documents\\Tesis\\mipit-testkit\\evidence\\suite\\2026-05-15T15-38-43-765Z\\e2e-verifications.log",
+      "summary": {
+        "assertions_passed": 76,
+        "assertions_failed": 0,
+        "assertions_total": 76
+      }
+    },
+    {
+      "id": "e2e-routing-correctness",
+      "title": "Routing correctness (999 pagos por defecto)",
+      "category": "e2e",
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 24838,
+      "command": "node e2e-routing-correctness.mjs",
+      "workdir": "C:\\Users\\nicog\\Documents\\Tesis\\mipit-testkit",
+      "logPath": "C:\\Users\\nicog\\Documents\\Tesis\\mipit-testkit\\evidence\\suite\\2026-05-15T15-38-43-765Z\\e2e-routing-correctness.log",
+      "summary": {
+        "verified": 999,
+        "correctly_routed": 999,
+        "misrouted": 0,
+        "lost": 0,
+        "routing_accuracy_pct": 100
+      }
+    },
+    {
+      "id": "e2e-load",
+      "title": "Load test",
+      "category": "e2e",
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 1964,
+      "command": "node e2e-load.mjs 200 20",
+      "workdir": "C:\\Users\\nicog\\Documents\\Tesis\\mipit-testkit",
+      "logPath": "C:\\Users\\nicog\\Documents\\Tesis\\mipit-testkit\\evidence\\suite\\2026-05-15T15-38-43-765Z\\e2e-load.log",
+      "summary": {
+        "succeeded": 200,
+        "failed": 0,
+        "success_rate_pct": 100,
+        "throughput_rps": 106,
+        "latency_p50_ms": 113,
+        "latency_p95_ms": 449,
+        "latency_p99_ms": 461
+      }
+    },
+    {
+      "id": "e2e-benchmark-latency",
+      "title": "Latency benchmark",
+      "category": "benchmark",
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 20398,
+      "command": "node e2e-benchmark-latency.mjs 5 20",
+      "workdir": "C:\\Users\\nicog\\Documents\\Tesis\\mipit-testkit",
+      "logPath": "C:\\Users\\nicog\\Documents\\Tesis\\mipit-testkit\\evidence\\suite\\2026-05-15T15-38-43-765Z\\e2e-benchmark-latency.log",
+      "summary": {
+        "POST /payments": {
+          "requests": 98,
+          "errors": 0,
+          "avg_ms": 88,
+          "p95_ms": 279,
+          "p99_ms": 284
+        },
+        "POST /translate/preview": {
+          "requests": 630,
+          "errors": 0,
+          "avg_ms": 15,
+          "p95_ms": 22,
+          "p99_ms": 25
+        },
+        "POST /translate": {
+          "requests": 640,
+          "errors": 0,
+          "avg_ms": 14,
+          "p95_ms": 20,
+          "p99_ms": 24
+        },
+        "GET /payments/:id": {
+          "requests": 650,
+          "errors": 0,
+          "avg_ms": 10,
+          "p95_ms": 16,
+          "p99_ms": 19
+        }
+      }
+    }
+  ]
+}
