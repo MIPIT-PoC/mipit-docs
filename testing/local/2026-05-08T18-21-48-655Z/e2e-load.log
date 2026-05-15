@@ -1,0 +1,42 @@
+# stdout
+
+========================================================
+  MIPIT Load Test (Node.js)
+  2026-05-08T18:24:22.520Z
+  Total requests: 200
+  Concurrency:    20
+  Origin rail:    SPEI
+  Destinations:   PIX / SPEI / BRE_B (random)
+========================================================
+
+  Sent 100 / 200
+  Sent 200 / 200
+
+========================================================
+  RESULTS
+========================================================
+  Total sent:     200
+  Succeeded:      200
+  Failed:         0
+  Success rate:   100%
+  Total time:     2097ms
+  Throughput:     ~95 req/s
+
+  Latency (ms):
+    min:   74ms
+    p50:   107ms
+    p90:   968ms
+    p95:   982ms
+    p99:   985ms
+    max:   991ms
+
+  Destination distribution:
+    PIX: 103
+    SPEI: 49
+    BRE_B: 48
+
+========================================================
+
+
+
+# stderr

@@ -1,0 +1,121 @@
+# stdout
+  console.log
+    ✓ Database connected
+
+      at setupDatabase (test/e2e/fixtures.ts:121:13)
+
+  console.log
+    ✓ RabbitMQ connected
+
+      at setupRabbitMQ (test/e2e/fixtures.ts:144:13)
+
+  console.log
+    
+    ✓ Test environment ready
+
+      at Object.<anonymous> (test/e2e/error-scenarios.test.ts:54:13)
+
+  console.warn
+    PIX mock admin endpoint unreachable — skipping forced rejection test
+
+    [0m [90m 64 |[39m   it([32m'bank rejection - PIX (NAO_REALIZADA) → DB status REJECTED'[39m[33m,[39m [36masync[39m () [33m=>[39m {
+     [90m 65 |[39m     [36mif[39m ([33m![39m([36mawait[39m adminEndpointReachable([32m'PIX'[39m))) {
+    [31m[1m>[22m[39m[90m 66 |[39m       console[33m.[39mwarn([32m'PIX mock admin endpoint unreachable — skipping forced rejection test'[39m)[33m;[39m
+     [90m    |[39m               [31m[1m^[22m[39m
+     [90m 67 |[39m       [36mreturn[39m[33m;[39m
+     [90m 68 |[39m     }
+     [90m 69 |[39m[0m
+
+      at Object.<anonymous> (test/e2e/error-scenarios.test.ts:66:15)
+
+  console.warn
+    SPEI mock admin endpoint unreachable — skipping forced rejection test
+
+    [0m [90m  96 |[39m   it([32m'bank rejection - SPEI (R01) → DB status REJECTED'[39m[33m,[39m [36masync[39m () [33m=>[39m {
+     [90m  97 |[39m     [36mif[39m ([33m![39m([36mawait[39m adminEndpointReachable([32m'SPEI'[39m))) {
+    [31m[1m>[22m[39m[90m  98 |[39m       console[33m.[39mwarn([32m'SPEI mock admin endpoint unreachable — skipping forced rejection test'[39m)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m  99 |[39m       [36mreturn[39m[33m;[39m
+     [90m 100 |[39m     }
+     [90m 101 |[39m[0m
+
+      at Object.<anonymous> (test/e2e/error-scenarios.test.ts:98:15)
+
+  console.warn
+    SPEI mock admin endpoint unreachable — skipping forced timeout test
+
+    [0m [90m 121 |[39m   it([32m'adapter timeout → retries → DLQ → status FAILED'[39m[33m,[39m [36masync[39m () [33m=>[39m {
+     [90m 122 |[39m     [36mif[39m ([33m![39m([36mawait[39m adminEndpointReachable([32m'SPEI'[39m))) {
+    [31m[1m>[22m[39m[90m 123 |[39m       console[33m.[39mwarn([32m'SPEI mock admin endpoint unreachable — skipping forced timeout test'[39m)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 124 |[39m       [36mreturn[39m[33m;[39m
+     [90m 125 |[39m     }
+     [90m 126 |[39m[0m
+
+      at Object.<anonymous> (test/e2e/error-scenarios.test.ts:123:15)
+
+  console.log
+    ✓ Cleaned up test payments for: validation
+
+      at cleanupDatabase (test/e2e/fixtures.ts:189:13)
+
+  console.log
+    ✓ Cleaned up test payments for: validation
+
+      at cleanupDatabase (test/e2e/fixtures.ts:189:13)
+
+  console.log
+    ✓ Cleaned up test payments for: pix
+
+      at cleanupDatabase (test/e2e/fixtures.ts:189:13)
+
+  console.log
+    ✓ Cleaned up test payments for: pix
+
+      at cleanupDatabase (test/e2e/fixtures.ts:189:13)
+
+  console.log
+    ✓ Cleaned up test payments for: spei
+
+      at cleanupDatabase (test/e2e/fixtures.ts:189:13)
+
+  console.log
+    ✓ Cleaned up test payments for: pix
+
+      at cleanupDatabase (test/e2e/fixtures.ts:189:13)
+
+  console.warn
+    PIX mock admin endpoint unreachable — skipping forced timeout test
+
+    [0m [90m 380 |[39m   it([32m'PIX timeout → eventual retry success or DLQ'[39m[33m,[39m [36masync[39m () [33m=>[39m {
+     [90m 381 |[39m     [36mif[39m ([33m![39m([36mawait[39m adminEndpointReachable([32m'PIX'[39m))) {
+    [31m[1m>[22m[39m[90m 382 |[39m       console[33m.[39mwarn([32m'PIX mock admin endpoint unreachable — skipping forced timeout test'[39m)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 383 |[39m       [36mreturn[39m[33m;[39m
+     [90m 384 |[39m     }
+     [90m 385 |[39m[0m
+
+      at Object.<anonymous> (test/e2e/error-scenarios.test.ts:382:15)
+
+
+
+# stderr
+PASS test/e2e/error-scenarios.test.ts
+  E2E: Error Scenarios (Fase 2)
+    √ bank rejection - PIX (NAO_REALIZADA) → DB status REJECTED (13 ms)
+    √ bank rejection - SPEI (R01) → DB status REJECTED (6 ms)
+    √ adapter timeout → retries → DLQ → status FAILED (5 ms)
+    √ validation error - invalid CLABE → 400 Bad Request (45 ms)
+    √ validation error - negative amount → 400 (19 ms)
+    √ idempotency - same Idempotency-Key → single payment row (1064 ms)
+    √ concurrency - 5 concurrent requests → 5 unique payments (67 ms)
+    √ auth failure - missing Bearer token → 401 (6 ms)
+    √ field truncation - long names truncated per spec (1053 ms)
+    √ decimal precision - amounts preserved exactly (1056 ms)
+    √ PIX timeout → eventual retry success or DLQ (5 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       11 passed, 11 total
+Snapshots:   0 total
+Time:        4.7 s, estimated 5 s
+Ran all test suites matching /test\\e2e\\error-scenarios.test.ts/i.

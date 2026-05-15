@@ -1,0 +1,132 @@
+# stdout
+  console.log
+    ✓ Database connected
+
+      at setupDatabase (test/e2e/fixtures.ts:121:13)
+
+  console.log
+    ✓ RabbitMQ connected
+
+      at setupRabbitMQ (test/e2e/fixtures.ts:144:13)
+
+  console.log
+    
+    ✓ Test environment ready
+
+      at Object.<anonymous> (test/e2e/error-scenarios-simplified.test.ts:35:13)
+
+  console.log
+    ✓ Cleaned up test payments for: validation
+
+      at cleanupDatabase (test/e2e/fixtures.ts:189:13)
+
+  console.log
+    ✓ Cleaned up test payments for: validation
+
+      at cleanupDatabase (test/e2e/fixtures.ts:189:13)
+
+  console.log
+    ✓ Cleaned up test payments for: validation
+
+      at cleanupDatabase (test/e2e/fixtures.ts:189:13)
+
+  console.log
+    ✓ Cleaned up test payments for: validation
+
+      at cleanupDatabase (test/e2e/fixtures.ts:189:13)
+
+  console.log
+    IDEMPOTENCY 1: 201 {
+      payment_id: 'PMT-01KR4D7EM6B6M56TV79F4AZMHZ',
+      status: 'QUEUED',
+      created_at: '2026-05-08T18:22:34.120Z',
+      origin_rail: 'PIX',
+      destination_rail: 'PIX',
+      route_rule_applied: 'pix_key_to_pix',
+      amount: 100,
+      currency: 'BRL',
+      trace_id: '01KR4D7EM4PWSNDNQ61P7STR3Y',
+      fx: { source_currency: 'BRL' }
+    }
+
+      at Object.<anonymous> (test/e2e/error-scenarios-simplified.test.ts:153:13)
+
+  console.log
+    IDEMPOTENCY 2: 201 {
+      fx: { source_currency: 'BRL' },
+      amount: 100,
+      status: 'QUEUED',
+      currency: 'BRL',
+      trace_id: '01KR4D7EM4PWSNDNQ61P7STR3Y',
+      created_at: '2026-05-08T18:22:34.120Z',
+      payment_id: 'PMT-01KR4D7EM6B6M56TV79F4AZMHZ',
+      origin_rail: 'PIX',
+      destination_rail: 'PIX',
+      route_rule_applied: 'pix_key_to_pix'
+    }
+
+      at Object.<anonymous> (test/e2e/error-scenarios-simplified.test.ts:154:13)
+
+  console.log
+    ✓ Cleaned up test payments for: pix
+
+      at cleanupDatabase (test/e2e/fixtures.ts:189:13)
+
+  console.log
+    ✓ Cleaned up test payments for: pix
+
+      at cleanupDatabase (test/e2e/fixtures.ts:189:13)
+
+  console.log
+    ✓ Cleaned up test payments for: pix
+
+      at cleanupDatabase (test/e2e/fixtures.ts:189:13)
+
+  console.log
+    ✓ Cleaned up test payments for: spei
+
+      at cleanupDatabase (test/e2e/fixtures.ts:189:13)
+
+  console.log
+    ✓ Cleaned up test payments for: pix
+
+      at cleanupDatabase (test/e2e/fixtures.ts:189:13)
+
+  console.log
+    ✓ Cleaned up test payments for: pix
+
+      at cleanupDatabase (test/e2e/fixtures.ts:189:13)
+
+  console.log
+    ✓ Cleaned up test payments for: pix
+
+      at cleanupDatabase (test/e2e/fixtures.ts:189:13)
+
+  console.log
+    ✓ Cleaned up test payments for: spei
+
+      at cleanupDatabase (test/e2e/fixtures.ts:189:13)
+
+
+
+# stderr
+PASS test/e2e/error-scenarios-simplified.test.ts (8.801 s)
+  E2E: Error Scenarios Fase 2 - Simplified
+    √ validation error - invalid CLABE should return 400 (47 ms)
+    √ validation error - negative amount should return 400 (22 ms)
+    √ validation error - missing amount should return 400 (21 ms)
+    √ validation error - invalid currency should return 400 (19 ms)
+    √ idempotency - same Idempotency-Key should create single payment row (1069 ms)
+    √ idempotency collision - same key different payload should be consistent (55 ms)
+    √ concurrency - 5 concurrent requests should create 5 unique payments (66 ms)
+    √ field truncation - long names should be handled per spec (1064 ms)
+    √ decimal precision - amounts should be preserved exactly (1066 ms)
+    √ payment status transitions should reach valid async state after submission (2055 ms)
+    √ BRL payment should route to PIX origin rail (1054 ms)
+    √ MXN payment should route to SPEI origin rail (1063 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       12 passed, 12 total
+Snapshots:   0 total
+Time:        8.978 s, estimated 10 s
+Ran all test suites matching /test\\e2e\\error-scenarios-simplified.test.ts/i.
