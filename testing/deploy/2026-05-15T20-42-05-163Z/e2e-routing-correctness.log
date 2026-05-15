@@ -1,0 +1,57 @@
+# stdout
+
+════════════════════════════════════════════════════════
+  MIPIT Routing Correctness Test
+  2026-05-15T20:44:16.875Z
+  Rails tested:      PIX, SPEI, BRE_B
+  Payments per rail: 333
+  Total payments:    999
+  Concurrency:       15
+  Origin:            SPEI
+════════════════════════════════════════════════════════
+
+Phase 1: Creating payments...
+  Created: 999 / 999 in 13082ms
+
+Phase 2: Waiting 15000ms for adapters to process...
+
+Phase 3: Verifying routing correctness...
+
+════════════════════════════════════════════════════════
+  ROUTING CORRECTNESS RESULTS
+════════════════════════════════════════════════════════
+
+  Total verified:     999
+  Correctly routed:   999
+  Misrouted:          0
+  Lost (unknown):     0
+  Routing accuracy:   100.00%
+
+  ── PIX destination ──
+    Expected:   333
+    Correct:    333
+    Misrouted:  0
+    Lost:       0
+    Statuses:   COMPLETED=87 REJECTED=9 FAILED=0 QUEUED=237
+
+  ── SPEI destination ──
+    Expected:   333
+    Correct:    333
+    Misrouted:  0
+    Lost:       0
+    Statuses:   COMPLETED=93 REJECTED=10 FAILED=0 QUEUED=230
+
+  ── BRE_B destination ──
+    Expected:   333
+    Correct:    333
+    Misrouted:  0
+    Lost:       0
+    Statuses:   COMPLETED=90 REJECTED=11 FAILED=0 QUEUED=232
+
+  Timings: create=13082ms verify=2711ms
+════════════════════════════════════════════════════════
+
+  VERDICT: PASS — all payments routed correctly
+
+
+# stderr

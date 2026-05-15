@@ -1,0 +1,2055 @@
+# stdout
+  console.log
+    [E2E][2026-05-15T20:42:32.114Z] DATABASE CONNECTED
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "connectionString": "postgresql://mipit:mipit_secret@localhost:5432/mipit"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:32.202Z] RABBITMQ CONNECTED
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "rmqUrl": "amqp://mipit:mipit_secret@localhost:5672/mipit",
+      "assertedQueues": [
+        "payment-acks"
+      ]
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    
+    ✓ Test environment ready
+
+      at Object.<anonymous> (test/e2e/error-scenarios.test.ts:54:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:32.246Z] MOCK CONTROL PIX reject-next
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "url": "http://10.43.101.29:9001/admin/reject-next"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:32.272Z] AUTH REQUEST /auth/token
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "options": {
+        "hostname": "localhost",
+        "port": 8080,
+        "path": "/auth/token",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "timeout": 5000
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:32.299Z] AUTH RESPONSE /auth/token
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "statusCode": 200,
+      "body": {
+        "access_token": "[REDACTED]",
+        "token_type": "[REDACTED]",
+        "expires_in": 86400
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:32.303Z] HTTP REQUEST #1 POST /payments
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "options": {
+        "hostname": "localhost",
+        "port": 8080,
+        "path": "/payments",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "[REDACTED]"
+        },
+        "timeout": 10000
+      },
+      "payload": {
+        "amount": 100,
+        "currency": "BRL",
+        "debtor": {
+          "alias": "PIX-test-debtor@mipit.test",
+          "name": "Test Debtor BR"
+        },
+        "creditor": {
+          "alias": "PIX-test-creditor@mipit.test",
+          "name": "Test Creditor BR"
+        },
+        "purpose": "test-pix-happy-path",
+        "reference": "REF-e2e-test-pix-1778877752246"
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:32.341Z] HTTP RESPONSE #1 POST /payments
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "statusCode": 201,
+      "body": {
+        "payment_id": "PMT-01KRPP0RZMWRA1Y6XJHFG0G71X",
+        "status": "QUEUED",
+        "created_at": "2026-05-15T20:42:32.308Z",
+        "origin_rail": "PIX",
+        "destination_rail": "PIX",
+        "route_rule_applied": "pix_key_to_pix",
+        "amount": 100,
+        "currency": "BRL",
+        "trace_id": "01KRPP0RZM2M7E3EYTZKXZ1QVP",
+        "fx": {
+          "source_currency": "BRL"
+        }
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:34.366Z] DB WAIT FOR PAYMENT STATUS
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "paymentId": "PMT-01KRPP0RZMWRA1Y6XJHFG0G71X",
+      "expectedStatus": "REJECTED",
+      "currentStatus": "REJECTED"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:34.378Z] DB AUDIT EVENTS
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "paymentId": "PMT-01KRPP0RZMWRA1Y6XJHFG0G71X",
+      "rowCount": 7,
+      "rows": [
+        {
+          "id": "01KRPP0RZSJW0BW06C4J3JK2D3",
+          "payment_id": "PMT-01KRPP0RZMWRA1Y6XJHFG0G71X",
+          "event_type": "PAYMENT_RECEIVED",
+          "actor": "system",
+          "detail": {
+            "amount": 100,
+            "currency": "BRL",
+            "origin_rail": "PIX"
+          },
+          "trace_id": "01KRPP0RZM2M7E3EYTZKXZ1QVP",
+          "created_at": {}
+        },
+        {
+          "id": "01KRPP0RZZTC22M6KKHW0VHCPR",
+          "payment_id": "PMT-01KRPP0RZMWRA1Y6XJHFG0G71X",
+          "event_type": "PAYMENT_VALIDATED",
+          "actor": "system-validator",
+          "detail": {
+            "origin_rail": "PIX",
+            "debtor_alias": "PIX-test-debtor@mipit.test",
+            "creditor_alias": "PIX-test-creditor@mipit.test"
+          },
+          "trace_id": "01KRPP0RZM2M7E3EYTZKXZ1QVP",
+          "created_at": {}
+        },
+        {
+          "id": "01KRPP0S05T674QE24CBWJF4Z3",
+          "payment_id": "PMT-01KRPP0RZMWRA1Y6XJHFG0G71X",
+          "event_type": "CANONICAL_UPDATED",
+          "actor": "system-translator",
+          "detail": {
+            "fields_count": 15,
+            "pacs008_version": "008.001.08"
+          },
+          "trace_id": "01KRPP0RZM2M7E3EYTZKXZ1QVP",
+          "created_at": {}
+        },
+        {
+          "id": "01KRPP0S07VQ593ZPNAAZCM07Y",
+          "payment_id": "PMT-01KRPP0RZMWRA1Y6XJHFG0G71X",
+          "event_type": "NORMALIZATION_COMPLETE",
+          "actor": "system",
+          "detail": {
+            "has_fx": false,
+            "currency": "BRL"
+          },
+          "trace_id": "01KRPP0RZM2M7E3EYTZKXZ1QVP",
+          "created_at": {}
+        },
+        {
+          "id": "01KRPP0S0A95DQCF1DPBRH7Z4H",
+          "payment_id": "PMT-01KRPP0RZMWRA1Y6XJHFG0G71X",
+          "event_type": "ROUTE_DECISION",
+          "actor": "system-router",
+          "detail": {
+            "rule_name": "pix_key_to_pix",
+            "timestamp": "2026-05-15T20:42:32.330Z",
+            "destination_rail": "PIX"
+          },
+          "trace_id": "01KRPP0RZM2M7E3EYTZKXZ1QVP",
+          "created_at": {}
+        },
+        {
+          "id": "01KRPP0S0GVTCZ6ZHFZYTHS70X",
+          "payment_id": "PMT-01KRPP0RZMWRA1Y6XJHFG0G71X",
+          "event_type": "STATUS_CHANGE",
+          "actor": "system",
+          "detail": {
+            "to_status": "QUEUED",
+            "from_status": "ROUTED"
+          },
+          "trace_id": "01KRPP0RZM2M7E3EYTZKXZ1QVP",
+          "created_at": {}
+        },
+        {
+          "id": "01KRPP0S15WDBJ4P91KMRYKHZ2",
+          "payment_id": "PMT-01KRPP0RZMWRA1Y6XJHFG0G71X",
+          "event_type": "ACK_RECEIVED",
+          "actor": "adapter-pix",
+          "detail": {
+            "error": {
+              "code": "AM04",
+              "message": "[ADMIN] Rejeição forçada pelo simulador (código: AM04)."
+            },
+            "adapter_id": "adapter-pix",
+            "latency_ms": 11,
+            "rail_tx_id": "01krpp0s0p6vbk81ckqrddpv2j",
+            "instance_id": "pix-vm2-1",
+            "rail_status": "REJECTED",
+            "final_payment_status": "REJECTED"
+          },
+          "trace_id": "01KRPP0RZM2M7E3EYTZKXZ1QVP",
+          "created_at": {}
+        }
+      ]
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:34.382Z] MOCK CONTROL PIX reset
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "url": "http://10.43.101.29:9001/admin/reset"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:34.419Z] DATABASE CLEANUP pix
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "referencePattern": "%e2e-test-pix-%",
+      "tracePattern": "e2e-test-pix-%"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:34.432Z] MOCK CONTROL SPEI reject-next
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "url": "http://10.43.101.29:9002/admin/reject-next"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:34.441Z] HTTP REQUEST #2 POST /payments
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "options": {
+        "hostname": "localhost",
+        "port": 8080,
+        "path": "/payments",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "[REDACTED]"
+        },
+        "timeout": 10000
+      },
+      "payload": {
+        "amount": 500,
+        "currency": "MXN",
+        "debtor": {
+          "alias": "SPEI-032180000118359719",
+          "name": "Test Debtor MX"
+        },
+        "creditor": {
+          "alias": "SPEI-032180000118359719",
+          "name": "Test Creditor MX"
+        },
+        "purpose": "test-spei-happy-path",
+        "reference": "REF-e2e-test-spei-1778877754432"
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:34.487Z] HTTP RESPONSE #2 POST /payments
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "statusCode": 201,
+      "body": {
+        "payment_id": "PMT-01KRPP0V2GBX2SD6A1X8HGF48K",
+        "status": "QUEUED",
+        "created_at": "2026-05-15T20:42:34.448Z",
+        "origin_rail": "SPEI",
+        "destination_rail": "SPEI",
+        "route_rule_applied": "clabe_to_spei",
+        "amount": 500,
+        "currency": "MXN",
+        "trace_id": "01KRPP0V2F7VS8N9HFB41J0S6Q",
+        "fx": {
+          "source_currency": "MXN"
+        }
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:36.495Z] DB WAIT FOR PAYMENT STATUS
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "paymentId": "PMT-01KRPP0V2GBX2SD6A1X8HGF48K",
+      "expectedStatus": "REJECTED",
+      "currentStatus": "REJECTED"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:36.496Z] MOCK CONTROL SPEI reset
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "url": "http://10.43.101.29:9002/admin/reset"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:36.532Z] DATABASE CLEANUP spei
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "referencePattern": "%e2e-test-spei-%",
+      "tracePattern": "e2e-test-spei-%"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:36.544Z] MOCK CONTROL SPEI timeout-next
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "url": "http://10.43.101.29:9002/admin/timeout-next"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:36.550Z] HTTP REQUEST #3 POST /payments
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "options": {
+        "hostname": "localhost",
+        "port": 8080,
+        "path": "/payments",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "[REDACTED]"
+        },
+        "timeout": 10000
+      },
+      "payload": {
+        "amount": 500,
+        "currency": "MXN",
+        "debtor": {
+          "alias": "SPEI-032180000118359719",
+          "name": "Test Debtor MX"
+        },
+        "creditor": {
+          "alias": "SPEI-032180000118359719",
+          "name": "Test Creditor MX"
+        },
+        "purpose": "test-spei-happy-path",
+        "reference": "REF-e2e-test-spei-1778877756544"
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:36.599Z] HTTP RESPONSE #3 POST /payments
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "statusCode": 201,
+      "body": {
+        "payment_id": "PMT-01KRPP0X4DMM1KP431JWGP5A3H",
+        "status": "QUEUED",
+        "created_at": "2026-05-15T20:42:36.558Z",
+        "origin_rail": "SPEI",
+        "destination_rail": "SPEI",
+        "route_rule_applied": "clabe_to_spei",
+        "amount": 500,
+        "currency": "MXN",
+        "trace_id": "01KRPP0X4C400070MDA01PEAN0",
+        "fx": {
+          "source_currency": "MXN"
+        }
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:44.611Z] DB WAIT FOR PAYMENT STATUS
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "paymentId": "PMT-01KRPP0X4DMM1KP431JWGP5A3H",
+      "expectedStatus": "FAILED",
+      "currentStatus": "QUEUED"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:45.119Z] DB WAIT FOR PAYMENT STATUS
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "paymentId": "PMT-01KRPP0X4DMM1KP431JWGP5A3H",
+      "expectedStatus": "FAILED",
+      "currentStatus": "QUEUED"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:45.628Z] DB WAIT FOR PAYMENT STATUS
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "paymentId": "PMT-01KRPP0X4DMM1KP431JWGP5A3H",
+      "expectedStatus": "FAILED",
+      "currentStatus": "QUEUED"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:46.138Z] DB WAIT FOR PAYMENT STATUS
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "paymentId": "PMT-01KRPP0X4DMM1KP431JWGP5A3H",
+      "expectedStatus": "FAILED",
+      "currentStatus": "QUEUED"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:46.647Z] DB WAIT FOR PAYMENT STATUS
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "paymentId": "PMT-01KRPP0X4DMM1KP431JWGP5A3H",
+      "expectedStatus": "FAILED",
+      "currentStatus": "QUEUED"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:47.155Z] DB WAIT FOR PAYMENT STATUS
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "paymentId": "PMT-01KRPP0X4DMM1KP431JWGP5A3H",
+      "expectedStatus": "FAILED",
+      "currentStatus": "QUEUED"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:47.665Z] DB WAIT FOR PAYMENT STATUS
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "paymentId": "PMT-01KRPP0X4DMM1KP431JWGP5A3H",
+      "expectedStatus": "FAILED",
+      "currentStatus": "COMPLETED"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:48.174Z] DB WAIT FOR PAYMENT STATUS
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "paymentId": "PMT-01KRPP0X4DMM1KP431JWGP5A3H",
+      "expectedStatus": "FAILED",
+      "currentStatus": "COMPLETED"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:48.684Z] DB WAIT FOR PAYMENT STATUS
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "paymentId": "PMT-01KRPP0X4DMM1KP431JWGP5A3H",
+      "expectedStatus": "FAILED",
+      "currentStatus": "COMPLETED"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:49.191Z] DB WAIT FOR PAYMENT STATUS
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "paymentId": "PMT-01KRPP0X4DMM1KP431JWGP5A3H",
+      "expectedStatus": "FAILED",
+      "currentStatus": "COMPLETED"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:49.700Z] DB PAYMENT DETAILS
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "paymentId": "PMT-01KRPP0X4DMM1KP431JWGP5A3H",
+      "payment": {
+        "payment_id": "PMT-01KRPP0X4DMM1KP431JWGP5A3H",
+        "idempotency_key": null,
+        "status": "COMPLETED",
+        "origin_rail": "SPEI",
+        "destination_rail": "SPEI",
+        "amount": "500.00",
+        "currency": "MXN",
+        "fx_source_currency": null,
+        "fx_target_currency": null,
+        "fx_rate": null,
+        "debtor_alias": "SPEI-032180000118359719",
+        "debtor_name": "Test Debtor MX",
+        "debtor_country": null,
+        "creditor_alias": "SPEI-032180000118359719",
+        "creditor_name": "Test Creditor MX",
+        "creditor_country": null,
+        "purpose": "test-spei-happy-path",
+        "reference": "REF-e2e-test-spei-1778877756544",
+        "origin_payload": {
+          "amount": 500,
+          "debtor": {
+            "name": "Test Debtor MX",
+            "alias": "SPEI-032180000118359719"
+          },
+          "purpose": "test-spei-happy-path",
+          "creditor": {
+            "name": "Test Creditor MX",
+            "alias": "SPEI-032180000118359719"
+          },
+          "currency": "MXN",
+          "reference": "REF-e2e-test-spei-1778877756544"
+        },
+        "canonical_payload": {
+          "fx": {
+            "source_currency": "MXN"
+          },
+          "alias": {
+            "type": "CLABE",
+            "value": "SPEI-032180000118359719"
+          },
+          "pmtId": {
+            "endToEndId": "E2E-01KRPP0X4YFMYMS28A7RDWRT5M"
+          },
+          "amount": {
+            "value": 500,
+            "currency": "MXN"
+          },
+          "debtor": {
+            "name": "Test Debtor MX",
+            "country": "MX",
+            "account_id": "SPEI-032180000118359719"
+          },
+          "grpHdr": {
+            "msgId": "MSG-01KRPP0X4YKS5YCEEXWJRXEGVH",
+            "creDtTm": "2026-05-15T20:42:36.574Z",
+            "nbOfTxs": 1
+          },
+          "origin": {
+            "rail": "SPEI"
+          },
+          "status": "RECEIVED",
+          "purpose": "test-spei-happy-path",
+          "creditor": {
+            "name": "Test Creditor MX",
+            "account_id": "SPEI-032180000118359719"
+          },
+          "trace_id": "01KRPP0X4C400070MDA01PEAN0",
+          "reference": "REF-e2e-test-spei-1778877756544",
+          "created_at": "2026-05-15T20:42:36.574Z",
+          "payment_id": "PMT-01KRPP0X4DMM1KP431JWGP5A3H",
+          "destination": {}
+        },
+        "translated_payload": {
+          "clabe": "SPEI-032180000118359719",
+          "monto": 500,
+          "moneda": "MXN",
+          "concepto": "test-spei-happy-path",
+          "referencia": "REF-e2e-test-spei-1778877756544",
+          "claveRastreo": "E2E-01KRPP0X4YFMYMS28A7RDWRT5M",
+          "fechaOperacion": "2026-05-15",
+          "cuentaOrdenante": "SPEI-032180000118359719",
+          "nombreOrdenante": "Test Debtor MX",
+          "cuentaBeneficiario": "SPEI-032180000118359719",
+          "nombreBeneficiario": "Test Creditor MX"
+        },
+        "rail_ack": {
+          "status": "ACCEPTED",
+          "rail_tx_id": "CECOBAN01KRPP17W3",
+          "raw_response": {
+            "iva": 0,
+            "monto": 500,
+            "estatus": "LIQUIDADA",
+            "claveRastreo": "MIPIT2026051528308631",
+            "folioControl": "CECOBAN01KRPP17W3",
+            "fechaOperacion": "20260515",
+            "horaLiquidacion": "20:42:47"
+          }
+        },
+        "route_rule_applied": "clabe_to_spei",
+        "trace_id": "01KRPP0X4C400070MDA01PEAN0",
+        "created_at": {},
+        "validated_at": {},
+        "canonicalized_at": {},
+        "routed_at": {},
+        "queued_at": {},
+        "sent_at": null,
+        "acked_at": {},
+        "completed_at": {},
+        "failed_at": null,
+        "updated_at": {},
+        "compensated_at": null,
+        "dead_letter_at": null
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:49.705Z] MOCK CONTROL SPEI reset
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "url": "http://10.43.101.29:9002/admin/reset"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:49.748Z] DATABASE CLEANUP spei
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "referencePattern": "%e2e-test-spei-%",
+      "tracePattern": "e2e-test-spei-%"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:49.752Z] HTTP REQUEST #4 POST /payments
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "options": {
+        "hostname": "localhost",
+        "port": 8080,
+        "path": "/payments",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "[REDACTED]"
+        },
+        "timeout": 10000
+      },
+      "payload": {
+        "amount": 100,
+        "currency": "MXN",
+        "debtor": {
+          "alias": "SPEI-invalid-clabe-12345",
+          "name": "Test Debtor"
+        },
+        "creditor": {
+          "alias": "SPEI-032180000118359719",
+          "name": "Test Creditor"
+        }
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:49.766Z] HTTP RESPONSE #4 POST /payments
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "statusCode": 400,
+      "body": {
+        "code": "VALIDATION_ERROR",
+        "message": "Invalid request payload",
+        "details": {
+          "debtor": [
+            "debtor SPEI alias must be a valid 18-digit CLABE (SPEI-XXXXXXXXXXXXXXXXXX)"
+          ]
+        },
+        "trace_id": "01KRPP1A0Z1GCZD4P6JBQNHEYT"
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:49.772Z] DB QUERY
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "sql": "SELECT 1 FROM payments WHERE debtor_alias = $1 LIMIT 1",
+      "params": [
+        "SPEI-invalid-clabe-12345"
+      ]
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:49.780Z] DB QUERY RESULT
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "rowCount": 0,
+      "rows": []
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:49.798Z] DATABASE CLEANUP validation
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "referencePattern": "%e2e-test-validation-%",
+      "tracePattern": "e2e-test-validation-%"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:49.801Z] HTTP REQUEST #5 POST /payments
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "options": {
+        "hostname": "localhost",
+        "port": 8080,
+        "path": "/payments",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "[REDACTED]"
+        },
+        "timeout": 10000
+      },
+      "payload": {
+        "amount": -100,
+        "currency": "BRL",
+        "debtor": {
+          "alias": "PIX-test-001",
+          "name": "Test Debtor"
+        },
+        "creditor": {
+          "alias": "PIX-test-002",
+          "name": "Test Creditor"
+        }
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:49.809Z] HTTP RESPONSE #5 POST /payments
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "statusCode": 400,
+      "body": {
+        "code": "VALIDATION_ERROR",
+        "message": "Invalid request payload",
+        "details": {
+          "amount": [
+            "Amount must be greater than 0"
+          ]
+        },
+        "trace_id": "01KRPP1A2DYAHQYR91YBNHZAWQ"
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:49.829Z] DATABASE CLEANUP validation
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "referencePattern": "%e2e-test-validation-%",
+      "tracePattern": "e2e-test-validation-%"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:49.832Z] HTTP REQUEST #6 POST /payments (idempotency)
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "idempotencyKey": "idem-test-1778877769831",
+      "payload": {
+        "amount": 100,
+        "currency": "BRL",
+        "debtor": {
+          "alias": "PIX-test-debtor@mipit.test",
+          "name": "Test Debtor BR"
+        },
+        "creditor": {
+          "alias": "PIX-test-creditor@mipit.test",
+          "name": "Test Creditor BR"
+        },
+        "purpose": "test-pix-happy-path",
+        "reference": "REF-e2e-test-pix-1778877769831"
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:49.876Z] HTTP RESPONSE #6 POST /payments (idempotency)
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "statusCode": 201,
+      "body": {
+        "payment_id": "PMT-01KRPP1A3GYDX0HAKX2VY1ZHVV",
+        "status": "QUEUED",
+        "created_at": "2026-05-15T20:42:49.842Z",
+        "origin_rail": "PIX",
+        "destination_rail": "PIX",
+        "route_rule_applied": "pix_key_to_pix",
+        "amount": 100,
+        "currency": "BRL",
+        "trace_id": "01KRPP1A3CH2PJNSGEJKFWGKFG",
+        "fx": {
+          "source_currency": "BRL"
+        }
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:50.880Z] HTTP REQUEST #7 POST /payments (idempotency)
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "idempotencyKey": "idem-test-1778877769831",
+      "payload": {
+        "amount": 100,
+        "currency": "BRL",
+        "debtor": {
+          "alias": "PIX-test-debtor@mipit.test",
+          "name": "Test Debtor BR"
+        },
+        "creditor": {
+          "alias": "PIX-test-creditor@mipit.test",
+          "name": "Test Creditor BR"
+        },
+        "purpose": "test-pix-happy-path",
+        "reference": "REF-e2e-test-pix-1778877769831"
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:50.898Z] HTTP RESPONSE #7 POST /payments (idempotency)
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "statusCode": 201,
+      "body": {
+        "fx": {
+          "source_currency": "BRL"
+        },
+        "amount": 100,
+        "status": "QUEUED",
+        "currency": "BRL",
+        "trace_id": "01KRPP1A3CH2PJNSGEJKFWGKFG",
+        "created_at": "2026-05-15T20:42:49.842Z",
+        "payment_id": "PMT-01KRPP1A3GYDX0HAKX2VY1ZHVV",
+        "origin_rail": "PIX",
+        "destination_rail": "PIX",
+        "route_rule_applied": "pix_key_to_pix"
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:50.902Z] DB QUERY
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "sql": "SELECT COUNT(*) as cnt FROM payments WHERE payment_id = $1",
+      "params": [
+        "PMT-01KRPP1A3GYDX0HAKX2VY1ZHVV"
+      ]
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:50.908Z] DB QUERY RESULT
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "rowCount": 1,
+      "rows": [
+        {
+          "cnt": "1"
+        }
+      ]
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:50.942Z] DATABASE CLEANUP pix
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "referencePattern": "%e2e-test-pix-%",
+      "tracePattern": "e2e-test-pix-%"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:50.948Z] HTTP REQUEST #8 POST /payments
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+          at async Promise.all (index 0)
+
+  console.log
+    {
+      "options": {
+        "hostname": "localhost",
+        "port": 8080,
+        "path": "/payments",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "[REDACTED]"
+        },
+        "timeout": 10000
+      },
+      "payload": {
+        "amount": 100,
+        "currency": "BRL",
+        "debtor": {
+          "alias": "PIX-concurrent-debtor-0",
+          "name": "Test Debtor"
+        },
+        "creditor": {
+          "alias": "PIX-concurrent-creditor",
+          "name": "Test Creditor"
+        }
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+          at async Promise.all (index 0)
+
+  console.log
+    [E2E][2026-05-15T20:42:50.951Z] HTTP REQUEST #9 POST /payments
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+          at async Promise.all (index 1)
+
+  console.log
+    {
+      "options": {
+        "hostname": "localhost",
+        "port": 8080,
+        "path": "/payments",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "[REDACTED]"
+        },
+        "timeout": 10000
+      },
+      "payload": {
+        "amount": 101,
+        "currency": "BRL",
+        "debtor": {
+          "alias": "PIX-concurrent-debtor-1",
+          "name": "Test Debtor"
+        },
+        "creditor": {
+          "alias": "PIX-concurrent-creditor",
+          "name": "Test Creditor"
+        }
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+          at async Promise.all (index 1)
+
+  console.log
+    [E2E][2026-05-15T20:42:50.955Z] HTTP REQUEST #10 POST /payments
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+          at async Promise.all (index 2)
+
+  console.log
+    {
+      "options": {
+        "hostname": "localhost",
+        "port": 8080,
+        "path": "/payments",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "[REDACTED]"
+        },
+        "timeout": 10000
+      },
+      "payload": {
+        "amount": 102,
+        "currency": "BRL",
+        "debtor": {
+          "alias": "PIX-concurrent-debtor-2",
+          "name": "Test Debtor"
+        },
+        "creditor": {
+          "alias": "PIX-concurrent-creditor",
+          "name": "Test Creditor"
+        }
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+          at async Promise.all (index 2)
+
+  console.log
+    [E2E][2026-05-15T20:42:50.958Z] HTTP REQUEST #11 POST /payments
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+          at async Promise.all (index 3)
+
+  console.log
+    {
+      "options": {
+        "hostname": "localhost",
+        "port": 8080,
+        "path": "/payments",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "[REDACTED]"
+        },
+        "timeout": 10000
+      },
+      "payload": {
+        "amount": 103,
+        "currency": "BRL",
+        "debtor": {
+          "alias": "PIX-concurrent-debtor-3",
+          "name": "Test Debtor"
+        },
+        "creditor": {
+          "alias": "PIX-concurrent-creditor",
+          "name": "Test Creditor"
+        }
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+          at async Promise.all (index 3)
+
+  console.log
+    [E2E][2026-05-15T20:42:50.961Z] HTTP REQUEST #12 POST /payments
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+          at async Promise.all (index 4)
+
+  console.log
+    {
+      "options": {
+        "hostname": "localhost",
+        "port": 8080,
+        "path": "/payments",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "[REDACTED]"
+        },
+        "timeout": 10000
+      },
+      "payload": {
+        "amount": 104,
+        "currency": "BRL",
+        "debtor": {
+          "alias": "PIX-concurrent-debtor-4",
+          "name": "Test Debtor"
+        },
+        "creditor": {
+          "alias": "PIX-concurrent-creditor",
+          "name": "Test Creditor"
+        }
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+          at async Promise.all (index 4)
+
+  console.log
+    [E2E][2026-05-15T20:42:51.038Z] HTTP RESPONSE #8 POST /payments
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "statusCode": 201,
+      "body": {
+        "payment_id": "PMT-01KRPP1B6T18X73BY1VHYBP50S",
+        "status": "QUEUED",
+        "created_at": "2026-05-15T20:42:50.970Z",
+        "origin_rail": "PIX",
+        "destination_rail": "PIX",
+        "route_rule_applied": "pix_key_to_pix",
+        "amount": 100,
+        "currency": "BRL",
+        "trace_id": "01KRPP1B6P6SB0GJ3KSWKBB955",
+        "fx": {
+          "source_currency": "BRL"
+        }
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:51.114Z] HTTP RESPONSE #10 POST /payments
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "statusCode": 201,
+      "body": {
+        "payment_id": "PMT-01KRPP1B6ZS7M4XM1K8SFM7YMV",
+        "status": "QUEUED",
+        "created_at": "2026-05-15T20:42:50.975Z",
+        "origin_rail": "PIX",
+        "destination_rail": "PIX",
+        "route_rule_applied": "pix_key_to_pix",
+        "amount": 102,
+        "currency": "BRL",
+        "trace_id": "01KRPP1B6XHF532HYQ2PQMXPFB",
+        "fx": {
+          "source_currency": "BRL"
+        }
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:51.120Z] HTTP RESPONSE #9 POST /payments
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "statusCode": 201,
+      "body": {
+        "payment_id": "PMT-01KRPP1B79SMBPMTHCEQ9E0KS0",
+        "status": "QUEUED",
+        "created_at": "2026-05-15T20:42:50.985Z",
+        "origin_rail": "PIX",
+        "destination_rail": "PIX",
+        "route_rule_applied": "pix_key_to_pix",
+        "amount": 101,
+        "currency": "BRL",
+        "trace_id": "01KRPP1B7696ZA9CFMJRWBMGQA",
+        "fx": {
+          "source_currency": "BRL"
+        }
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:51.126Z] HTTP RESPONSE #11 POST /payments
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "statusCode": 201,
+      "body": {
+        "payment_id": "PMT-01KRPP1B7F131Q47J19AWQHDYN",
+        "status": "QUEUED",
+        "created_at": "2026-05-15T20:42:50.991Z",
+        "origin_rail": "PIX",
+        "destination_rail": "PIX",
+        "route_rule_applied": "pix_key_to_pix",
+        "amount": 103,
+        "currency": "BRL",
+        "trace_id": "01KRPP1B7F3BKWBPC8VHMMTREY",
+        "fx": {
+          "source_currency": "BRL"
+        }
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:51.130Z] HTTP RESPONSE #12 POST /payments
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "statusCode": 201,
+      "body": {
+        "payment_id": "PMT-01KRPP1B7KDNP3S0XGXJCW2JT0",
+        "status": "QUEUED",
+        "created_at": "2026-05-15T20:42:50.995Z",
+        "origin_rail": "PIX",
+        "destination_rail": "PIX",
+        "route_rule_applied": "pix_key_to_pix",
+        "amount": 104,
+        "currency": "BRL",
+        "trace_id": "01KRPP1B7J83YV9J3Y5QSTFPMV",
+        "fx": {
+          "source_currency": "BRL"
+        }
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:51.154Z] DATABASE CLEANUP pix
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "referencePattern": "%e2e-test-pix-%",
+      "tracePattern": "e2e-test-pix-%"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:51.165Z] HTTP REQUEST #13 POST /payments
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "options": {
+        "hostname": "localhost",
+        "port": 8080,
+        "path": "/payments",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "[REDACTED]"
+        },
+        "timeout": 10000
+      },
+      "payload": {
+        "amount": 100,
+        "currency": "MXN",
+        "debtor": {
+          "alias": "SPEI-032180000118359719",
+          "name": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        },
+        "creditor": {
+          "alias": "SPEI-032180000118359719",
+          "name": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        }
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:51.202Z] HTTP RESPONSE #13 POST /payments
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "statusCode": 201,
+      "body": {
+        "payment_id": "PMT-01KRPP1BD1VP6010VP8FH6G2C2",
+        "status": "QUEUED",
+        "created_at": "2026-05-15T20:42:51.169Z",
+        "origin_rail": "SPEI",
+        "destination_rail": "SPEI",
+        "route_rule_applied": "clabe_to_spei",
+        "amount": 100,
+        "currency": "MXN",
+        "trace_id": "01KRPP1BD0B9538P9ZM9HY7HDD",
+        "fx": {
+          "source_currency": "MXN"
+        }
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:52.212Z] DB PAYMENT DETAILS
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "paymentId": "PMT-01KRPP1BD1VP6010VP8FH6G2C2",
+      "payment": {
+        "payment_id": "PMT-01KRPP1BD1VP6010VP8FH6G2C2",
+        "idempotency_key": null,
+        "status": "COMPLETED",
+        "origin_rail": "SPEI",
+        "destination_rail": "SPEI",
+        "amount": "100.00",
+        "currency": "MXN",
+        "fx_source_currency": null,
+        "fx_target_currency": null,
+        "fx_rate": null,
+        "debtor_alias": "SPEI-032180000118359719",
+        "debtor_name": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "debtor_country": null,
+        "creditor_alias": "SPEI-032180000118359719",
+        "creditor_name": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "creditor_country": null,
+        "purpose": "P2P",
+        "reference": "MIPIT-POC",
+        "origin_payload": {
+          "amount": 100,
+          "debtor": {
+            "name": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "alias": "SPEI-032180000118359719"
+          },
+          "purpose": "P2P",
+          "creditor": {
+            "name": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "alias": "SPEI-032180000118359719"
+          },
+          "currency": "MXN",
+          "reference": "MIPIT-POC"
+        },
+        "canonical_payload": {
+          "fx": {
+            "source_currency": "MXN"
+          },
+          "alias": {
+            "type": "CLABE",
+            "value": "SPEI-032180000118359719"
+          },
+          "pmtId": {
+            "endToEndId": "E2E-01KRPP1BDD89RWF6Q4VHN2J0E7"
+          },
+          "amount": {
+            "value": 100,
+            "currency": "MXN"
+          },
+          "debtor": {
+            "name": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "country": "MX",
+            "account_id": "SPEI-032180000118359719"
+          },
+          "grpHdr": {
+            "msgId": "MSG-01KRPP1BDDVW1CTXEMB90K2GWS",
+            "creDtTm": "2026-05-15T20:42:51.181Z",
+            "nbOfTxs": 1
+          },
+          "origin": {
+            "rail": "SPEI"
+          },
+          "status": "RECEIVED",
+          "purpose": "P2P",
+          "creditor": {
+            "name": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "account_id": "SPEI-032180000118359719"
+          },
+          "trace_id": "01KRPP1BD0B9538P9ZM9HY7HDD",
+          "reference": "MIPIT-POC",
+          "created_at": "2026-05-15T20:42:51.181Z",
+          "payment_id": "PMT-01KRPP1BD1VP6010VP8FH6G2C2",
+          "destination": {}
+        },
+        "translated_payload": {
+          "clabe": "SPEI-032180000118359719",
+          "monto": 100,
+          "moneda": "MXN",
+          "concepto": "P2P",
+          "referencia": "MIPIT-POC",
+          "claveRastreo": "E2E-01KRPP1BDD89RWF6Q4VHN2J0E7",
+          "fechaOperacion": "2026-05-15",
+          "cuentaOrdenante": "SPEI-032180000118359719",
+          "nombreOrdenante": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "cuentaBeneficiario": "SPEI-032180000118359719",
+          "nombreBeneficiario": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        },
+        "rail_ack": {
+          "status": "ACCEPTED",
+          "rail_tx_id": "CECOBAN01KRPP1BNZ",
+          "raw_response": {
+            "iva": 0,
+            "monto": 100,
+            "estatus": "LIQUIDADA",
+            "claveRastreo": "MIPIT2026051591297362",
+            "folioControl": "CECOBAN01KRPP1BNZ",
+            "fechaOperacion": "20260515",
+            "horaLiquidacion": "20:42:51"
+          }
+        },
+        "route_rule_applied": "clabe_to_spei",
+        "trace_id": "01KRPP1BD0B9538P9ZM9HY7HDD",
+        "created_at": {},
+        "validated_at": {},
+        "canonicalized_at": {},
+        "routed_at": {},
+        "queued_at": {},
+        "sent_at": null,
+        "acked_at": {},
+        "completed_at": {},
+        "failed_at": null,
+        "updated_at": {},
+        "compensated_at": null,
+        "dead_letter_at": null
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:52.234Z] DATABASE CLEANUP spei
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "referencePattern": "%e2e-test-spei-%",
+      "tracePattern": "e2e-test-spei-%"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:52.237Z] HTTP REQUEST #14 POST /payments
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "options": {
+        "hostname": "localhost",
+        "port": 8080,
+        "path": "/payments",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "[REDACTED]"
+        },
+        "timeout": 10000
+      },
+      "payload": {
+        "amount": 1234.56,
+        "currency": "BRL",
+        "debtor": {
+          "alias": "PIX-precision-001",
+          "name": "Test"
+        },
+        "creditor": {
+          "alias": "PIX-precision-002",
+          "name": "Test"
+        }
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:52.285Z] HTTP RESPONSE #14 POST /payments
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "statusCode": 201,
+      "body": {
+        "payment_id": "PMT-01KRPP1CEJ5715Q0M36NY3H7DV",
+        "status": "QUEUED",
+        "created_at": "2026-05-15T20:42:52.242Z",
+        "origin_rail": "PIX",
+        "destination_rail": "PIX",
+        "route_rule_applied": "pix_key_to_pix",
+        "amount": 1234.56,
+        "currency": "BRL",
+        "trace_id": "01KRPP1CEHGQF27CXSMG33PBNV",
+        "fx": {
+          "source_currency": "BRL"
+        }
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:53.298Z] DB PAYMENT DETAILS
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "paymentId": "PMT-01KRPP1CEJ5715Q0M36NY3H7DV",
+      "payment": {
+        "payment_id": "PMT-01KRPP1CEJ5715Q0M36NY3H7DV",
+        "idempotency_key": null,
+        "status": "REJECTED",
+        "origin_rail": "PIX",
+        "destination_rail": "PIX",
+        "amount": "1234.56",
+        "currency": "BRL",
+        "fx_source_currency": null,
+        "fx_target_currency": null,
+        "fx_rate": null,
+        "debtor_alias": "PIX-precision-001",
+        "debtor_name": "Test",
+        "debtor_country": null,
+        "creditor_alias": "PIX-precision-002",
+        "creditor_name": "Test",
+        "creditor_country": null,
+        "purpose": "P2P",
+        "reference": "MIPIT-POC",
+        "origin_payload": {
+          "amount": 1234.56,
+          "debtor": {
+            "name": "Test",
+            "alias": "PIX-precision-001"
+          },
+          "purpose": "P2P",
+          "creditor": {
+            "name": "Test",
+            "alias": "PIX-precision-002"
+          },
+          "currency": "BRL",
+          "reference": "MIPIT-POC"
+        },
+        "canonical_payload": {
+          "fx": {
+            "source_currency": "BRL"
+          },
+          "alias": {
+            "type": "PIX_KEY",
+            "value": "precision-002"
+          },
+          "pmtId": {
+            "endToEndId": "E2E-01KRPP1CF3PV5YZ69Y5JBD2K62"
+          },
+          "amount": {
+            "value": 1234.56,
+            "currency": "BRL"
+          },
+          "debtor": {
+            "name": "Test",
+            "country": "BR",
+            "account_id": "PIX-precision-001"
+          },
+          "grpHdr": {
+            "msgId": "MSG-01KRPP1CF3W2BYZK77AHTQBPZF",
+            "creDtTm": "2026-05-15T20:42:52.259Z",
+            "nbOfTxs": 1
+          },
+          "origin": {
+            "rail": "PIX"
+          },
+          "status": "RECEIVED",
+          "purpose": "P2P",
+          "creditor": {
+            "name": "Test",
+            "account_id": "PIX-precision-002"
+          },
+          "trace_id": "01KRPP1CEHGQF27CXSMG33PBNV",
+          "reference": "MIPIT-POC",
+          "created_at": "2026-05-15T20:42:52.259Z",
+          "payment_id": "PMT-01KRPP1CEJ5715Q0M36NY3H7DV",
+          "destination": {}
+        },
+        "translated_payload": {
+          "amount": 1234.56,
+          "pixKey": "precision-002",
+          "purpose": "P2P",
+          "currency": "BRL",
+          "createdAt": "2026-05-15T20:42:52.259Z",
+          "reference": "MIPIT-POC",
+          "debtorName": "Test",
+          "endToEndId": "E2E-01KRPP1CF3PV5YZ69Y5JBD2K62",
+          "creditorName": "Test",
+          "debtorAccount": "PIX-precision-001",
+          "creditorAccount": "PIX-precision-002"
+        },
+        "rail_ack": {
+          "error": {
+            "code": "AC03",
+            "message": "Chave 'precision-002' não corresponde ao formato esperado para tipoChave 'EVP'."
+          },
+          "status": "REJECTED",
+          "rail_tx_id": "01krpp1cft8cdjq49zp3211cft",
+          "raw_response": {
+            "id": "01krpp1cft8cdjq49zp3211cft",
+            "valor": "1234.56",
+            "motivo": "Chave 'precision-002' não corresponde ao formato esperado para tipoChave 'EVP'.",
+            "status": "NAO_REALIZADA",
+            "horario": "2026-05-15T20:42:52.282Z",
+            "pagador": {
+              "ispb": "26264220"
+            },
+            "recebedor": {
+              "ispb": "26264220"
+            },
+            "codigoErro": "AC03",
+            "endToEndId": "E26264220202605152042FALN9UZKS2P",
+            "mensagemErro": "Chave 'precision-002' não corresponde ao formato esperado para tipoChave 'EVP'."
+          }
+        },
+        "route_rule_applied": "pix_key_to_pix",
+        "trace_id": "01KRPP1CEHGQF27CXSMG33PBNV",
+        "created_at": {},
+        "validated_at": {},
+        "canonicalized_at": {},
+        "routed_at": {},
+        "queued_at": {},
+        "sent_at": null,
+        "acked_at": {},
+        "completed_at": null,
+        "failed_at": null,
+        "updated_at": {},
+        "compensated_at": null,
+        "dead_letter_at": null
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:53.325Z] DATABASE CLEANUP pix
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "referencePattern": "%e2e-test-pix-%",
+      "tracePattern": "e2e-test-pix-%"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:53.360Z] MOCK CONTROL PIX timeout-next
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "url": "http://10.43.101.29:9001/admin/timeout-next"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:53.383Z] HTTP REQUEST #15 POST /payments
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "options": {
+        "hostname": "localhost",
+        "port": 8080,
+        "path": "/payments",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "[REDACTED]"
+        },
+        "timeout": 10000
+      },
+      "payload": {
+        "amount": 100,
+        "currency": "BRL",
+        "debtor": {
+          "alias": "PIX-test-debtor@mipit.test",
+          "name": "Test Debtor BR"
+        },
+        "creditor": {
+          "alias": "PIX-test-creditor@mipit.test",
+          "name": "Test Creditor BR"
+        },
+        "purpose": "test-pix-happy-path",
+        "reference": "REF-e2e-test-pix-1778877773360"
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:53.442Z] HTTP RESPONSE #15 POST /payments
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "statusCode": 201,
+      "body": {
+        "payment_id": "PMT-01KRPP1DJGXENBQE8V4B1GQ1NQ",
+        "status": "QUEUED",
+        "created_at": "2026-05-15T20:42:53.393Z",
+        "origin_rail": "PIX",
+        "destination_rail": "PIX",
+        "route_rule_applied": "pix_key_to_pix",
+        "amount": 100,
+        "currency": "BRL",
+        "trace_id": "01KRPP1DJGVFKR6TPVFA2NEWVB",
+        "fx": {
+          "source_currency": "BRL"
+        }
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:58.454Z] DB PAYMENT DETAILS
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "paymentId": "PMT-01KRPP1DJGXENBQE8V4B1GQ1NQ",
+      "payment": {
+        "payment_id": "PMT-01KRPP1DJGXENBQE8V4B1GQ1NQ",
+        "idempotency_key": null,
+        "status": "QUEUED",
+        "origin_rail": "PIX",
+        "destination_rail": "PIX",
+        "amount": "100.00",
+        "currency": "BRL",
+        "fx_source_currency": null,
+        "fx_target_currency": null,
+        "fx_rate": null,
+        "debtor_alias": "PIX-test-debtor@mipit.test",
+        "debtor_name": "Test Debtor BR",
+        "debtor_country": null,
+        "creditor_alias": "PIX-test-creditor@mipit.test",
+        "creditor_name": "Test Creditor BR",
+        "creditor_country": null,
+        "purpose": "test-pix-happy-path",
+        "reference": "REF-e2e-test-pix-1778877773360",
+        "origin_payload": {
+          "amount": 100,
+          "debtor": {
+            "name": "Test Debtor BR",
+            "alias": "PIX-test-debtor@mipit.test"
+          },
+          "purpose": "test-pix-happy-path",
+          "creditor": {
+            "name": "Test Creditor BR",
+            "alias": "PIX-test-creditor@mipit.test"
+          },
+          "currency": "BRL",
+          "reference": "REF-e2e-test-pix-1778877773360"
+        },
+        "canonical_payload": {
+          "fx": {
+            "source_currency": "BRL"
+          },
+          "alias": {
+            "type": "PIX_KEY",
+            "value": "test-creditor@mipit.test"
+          },
+          "pmtId": {
+            "endToEndId": "E2E-01KRPP1DJZVC30T0PK3P1RE2KQ"
+          },
+          "amount": {
+            "value": 100,
+            "currency": "BRL"
+          },
+          "debtor": {
+            "name": "Test Debtor BR",
+            "country": "BR",
+            "account_id": "PIX-test-debtor@mipit.test"
+          },
+          "grpHdr": {
+            "msgId": "MSG-01KRPP1DJZ07JBS1N1A4YRSPB7",
+            "creDtTm": "2026-05-15T20:42:53.407Z",
+            "nbOfTxs": 1
+          },
+          "origin": {
+            "rail": "PIX"
+          },
+          "status": "RECEIVED",
+          "purpose": "test-pix-happy-path",
+          "creditor": {
+            "name": "Test Creditor BR",
+            "account_id": "PIX-test-creditor@mipit.test"
+          },
+          "trace_id": "01KRPP1DJGVFKR6TPVFA2NEWVB",
+          "reference": "REF-e2e-test-pix-1778877773360",
+          "created_at": "2026-05-15T20:42:53.407Z",
+          "payment_id": "PMT-01KRPP1DJGXENBQE8V4B1GQ1NQ",
+          "destination": {}
+        },
+        "translated_payload": {
+          "amount": 100,
+          "pixKey": "test-creditor@mipit.test",
+          "purpose": "test-pix-happy-path",
+          "currency": "BRL",
+          "createdAt": "2026-05-15T20:42:53.407Z",
+          "reference": "REF-e2e-test-pix-1778877773360",
+          "debtorName": "Test Debtor BR",
+          "endToEndId": "E2E-01KRPP1DJZVC30T0PK3P1RE2KQ",
+          "creditorName": "Test Creditor BR",
+          "debtorAccount": "PIX-test-debtor@mipit.test",
+          "creditorAccount": "PIX-test-creditor@mipit.test"
+        },
+        "rail_ack": null,
+        "route_rule_applied": "pix_key_to_pix",
+        "trace_id": "01KRPP1DJGVFKR6TPVFA2NEWVB",
+        "created_at": {},
+        "validated_at": {},
+        "canonicalized_at": {},
+        "routed_at": {},
+        "queued_at": {},
+        "sent_at": null,
+        "acked_at": null,
+        "completed_at": null,
+        "failed_at": null,
+        "updated_at": {},
+        "compensated_at": null,
+        "dead_letter_at": null
+      }
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:58.458Z] MOCK CONTROL PIX reset
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "url": "http://10.43.101.29:9001/admin/reset"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+  console.log
+    [E2E][2026-05-15T20:42:58.507Z] DATABASE CLEANUP pix
+
+      at logTrace (test/e2e/fixtures.ts:53:11)
+
+  console.log
+    {
+      "referencePattern": "%e2e-test-pix-%",
+      "tracePattern": "e2e-test-pix-%"
+    }
+
+      at logTrace (test/e2e/fixtures.ts:55:13)
+
+
+
+# stderr
+PASS test/e2e/error-scenarios.test.ts (29.988 s)
+  E2E: Error Scenarios (Fase 2)
+    ✓ bank rejection - PIX (NAO_REALIZADA) → DB status REJECTED (2215 ms)
+    ✓ bank rejection - SPEI (R01) → DB status REJECTED (2114 ms)
+    ✓ adapter timeout → retries → DLQ → status FAILED (13214 ms)
+    ✓ validation error - invalid CLABE → 400 Bad Request (49 ms)
+    ✓ validation error - negative amount → 400 (30 ms)
+    ✓ idempotency - same Idempotency-Key → single payment row (1114 ms)
+    ✓ concurrency - 5 concurrent requests → 5 unique payments (210 ms)
+    ✓ auth failure - missing Bearer token → 401 (7 ms)
+    ✓ field truncation - long names truncated per spec (1071 ms)
+    ✓ decimal precision - amounts preserved exactly (1096 ms)
+    ✓ PIX timeout → eventual retry success or DLQ (5179 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       11 passed, 11 total
+Snapshots:   0 total
+Time:        30.367 s
+Ran all test suites matching /test\/e2e\/error-scenarios.test.ts/i.

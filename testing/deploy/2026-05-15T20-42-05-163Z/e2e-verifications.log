@@ -1,0 +1,116 @@
+# stdout
+
+════════════════════════════════════════════════════════
+  MIPIT — 8 Comprehensive E2E Verification Tests
+  2026-05-15T20:43:15.332Z
+════════════════════════════════════════════════════════
+
+═══ Test 1: Idempotency under concurrency ═══
+    ✅ All 100 requests succeeded (9 created, 91 cached)
+    ✅ No server errors (got 0)
+    ✅ All requests returned same payment_id (unique IDs: 1)
+    ✅ Different body + same key → 409: HTTP 409
+
+═══ Test 2: Invalid alias validation ═══
+    ✅ "CLABE with wrong check digit (last digit off by 1)" → HTTP 400
+    ✅ "CLABE too short (17 digits)" → HTTP 400
+    ✅ "CLABE with letters" → HTTP 400
+    ✅ "BRE-B phone with only 9 digits (+57 needs 10)" → HTTP 400
+    ✅ "Unknown prefix (no rail match)" → HTTP 400
+    ✅ "Empty alias" → HTTP 400
+
+═══ Test 3: FX cross-currency ═══
+    ✅ Payment created: HTTP 201
+    ✅ Canonical payload exists
+    ✅ FX data present: currency=USD, fx={"source_currency":"MXN"}
+    ✅ Routed to PIX: PIX
+    ✅ MXN→COP payment created: HTTP 201
+    ✅ FX targets COP: {"source_currency":"MXN"}
+
+═══ Test 4: Translation round-trip fidelity ═══
+    ✅ Preview returned: HTTP 200
+    ✅ Amount preserved: 1500
+    ✅ Debtor name preserved: João Silva
+    ✅ Creditor name preserved: Maria Santos
+    ✅ Origin rail: PIX
+    ✅ SPEI back-translation has monto: {"claveRastreo":"E2626422020260404120012345678901","clabe":"maria@email.com","mo
+    ✅ SPEI translation exists: success=true
+    ✅ SWIFT MT103 translation exists: success=true
+    ✅ All rails translated: SPEI, SWIFT_MT103, ISO20022_MX, ACH_NACHA, FEDNOW, BRE_B
+    ✅ Direct PIX→SPEI: HTTP 200
+    ✅ SPEI monto present: 1500
+    ✅ SPEI-specific fields present
+
+═══ Test 5: Exact limit boundary tests ═══
+    ✅ COP 19.99M (under limit) → created: HTTP 201
+    ✅ COP 20M+1 → payment created (rejection at adapter): HTTP 201
+    ✅ COP 20M+1 → REJECTED by BRE_B mock: status=REJECTED
+    ✅ Error code BREB003: BREB003
+    ✅ Zero amount → rejected: HTTP 400
+    ✅ Negative amount → rejected: HTTP 400
+
+═══ Test 6: Error code coverage per rail ═══
+  Sampling PIX (40 payments)...
+    PIX: 37 COMPLETED, 3 REJECTED
+    PIX error codes: BE01(1), RR04(1), AM04(1)
+    ✅ PIX has COMPLETED payments: 37
+    ✅ PIX has REJECTED payments: 3
+    ✅ PIX has 3 distinct error code(s) (expected ≥1)
+  Sampling SPEI (40 payments)...
+    SPEI: 39 COMPLETED, 1 REJECTED
+    SPEI error codes: R05(1)
+    ✅ SPEI has COMPLETED payments: 39
+    ✅ SPEI has REJECTED payments: 1
+    ✅ SPEI has 1 distinct error code(s) (expected ≥1)
+  Sampling BRE_B (40 payments)...
+    BRE_B: 34 COMPLETED, 6 REJECTED
+    BRE_B error codes: BREB001(4), BREB002(1), BREB004(1)
+    ✅ BRE_B has COMPLETED payments: 34
+    ✅ BRE_B has REJECTED payments: 6
+    ✅ BRE_B has 3 distinct error code(s) (expected ≥1)
+
+═══ Test 7: Webhook registration and delivery ═══
+    ✅ Payment created for webhook: HTTP 201
+    ✅ Webhook registered: HTTP 201
+    ✅ Webhook URL: https://httpbin.org/post
+    ✅ Events array: ["COMPLETED","REJECTED","FAILED"]
+    ✅ List webhooks: HTTP 200
+    ✅ Has 1 webhook(s)
+    ✅ Payment reached terminal status: COMPLETED
+    ✅ Webhook delivery tracked: 0 attempt(s), status=pending, fired=not yet
+    ✅ Non-existent payment webhook → 404: HTTP 404
+
+═══ Test 8: Pipeline status progression + audit ═══
+    ✅ Payment created: HTTP 201
+    ✅ created_at: 2026-05-15T20:44:16.231Z
+    ✅ validated_at: 2026-05-15T20:44:16.238Z
+    ✅ canonicalized_at: 2026-05-15T20:44:16.247Z
+    ✅ routed_at: 2026-05-15T20:44:16.259Z
+    ✅ queued_at: 2026-05-15T20:44:16.271Z
+    ✅ validated_at ≥ created_at
+    ✅ canonicalized_at ≥ validated_at
+    ✅ routed_at ≥ canonicalized_at
+    ✅ queued_at ≥ routed_at
+    ✅ Audit trail has events (6)
+    ✅ Has PAYMENT_RECEIVED event
+    ✅ Has PAYMENT_VALIDATED event
+    ✅ Has CANONICAL_UPDATED event
+    ✅ Audit events in chronological order
+    ✅ All audit events have trace_id
+    ✅ Destination rail assigned: PIX
+    ✅ Origin rail correct: PIX
+    ✅ Canonical payload stored
+    ✅ Translated payload stored
+    ✅ Route rule applied: pix_key_to_pix
+    ✅ Terminal status reached: COMPLETED
+    ✅ Rail ACK status: ACCEPTED
+    ✅ acked_at timestamp: 2026-05-15T20:44:16.683Z
+
+════════════════════════════════════════════════════════
+  TOTAL: 76 passed / 0 failed / 76 total
+  ALL PASS ✅
+════════════════════════════════════════════════════════
+
+
+
+# stderr
