@@ -1,0 +1,68 @@
+# stdout
+
+════════════════════════════════════════════════════════════
+  MIPIT — Latency Benchmark
+  2026-05-09T16:22:15.520Z
+  Duration:    10s per endpoint
+  RPS target:  30 (for POST /payments)
+════════════════════════════════════════════════════════════
+
+[1/4] POST /payments (payment creation)...
+  POST /payments:
+    requests:  297
+    errors:    0
+    avg:       119ms
+    p50:       116ms
+    p90:       136ms
+    p95:       158ms
+    p99:       179ms
+    max:       201ms
+    min:       83ms
+    throughput: 29.7 req/s
+
+[2/4] POST /translate/preview (PIX → 6 rails)...
+  POST /translate/preview:
+    requests:  1120
+    errors:    0
+    avg:       25ms
+    p50:       25ms
+    p90:       36ms
+    p95:       39ms
+    p99:       45ms
+    max:       67ms
+    min:       6ms
+    throughput: 112.0 req/s
+
+[3/4] POST /translate (direct, rotating pairs)...
+  POST /translate:
+    requests:  1210
+    errors:    0
+    avg:       21ms
+    p50:       21ms
+    p90:       30ms
+    p95:       32ms
+    p99:       38ms
+    max:       53ms
+    min:       5ms
+    throughput: 121.0 req/s
+
+[4/4] GET /payments/:id (detail lookup)...
+  GET /payments/:id:
+    requests:  1320
+    errors:    447
+    avg:       20ms
+    p50:       21ms
+    p90:       31ms
+    p95:       35ms
+    p99:       42ms
+    max:       72ms
+    min:       3ms
+    throughput: 132.0 req/s
+
+════════════════════════════════════════════════════════════
+  BENCHMARK COMPLETE
+════════════════════════════════════════════════════════════
+
+
+
+# stderr

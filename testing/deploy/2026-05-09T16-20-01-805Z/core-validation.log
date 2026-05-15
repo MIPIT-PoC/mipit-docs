@@ -1,0 +1,20 @@
+# stdout
+
+> mipit-core@0.1.0 validate:core
+> tsx test/validation/run-core-validation.ts
+
+
+Core validation finished
+{
+  "total": 28,
+  "passed": 28,
+  "failed": 0,
+  "warnings": 0,
+  "skipped": 0,
+  "critical_failures": 0
+}
+JSON report: test/validation/results/core-validation-2026-05-09T16-20-05-441Z.json
+Markdown report: test/validation/results/core-validation-2026-05-09T16-20-05-441Z.md
+
+
+# stderr

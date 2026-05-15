@@ -1,0 +1,125 @@
+# stdout
+  console.log
+    ✓ Database connected
+
+      at setupDatabase (test/e2e/fixtures.ts:121:13)
+
+  console.log
+    ✓ RabbitMQ connected
+
+      at setupRabbitMQ (test/e2e/fixtures.ts:144:13)
+
+  console.log
+    
+    ✓ Test environment ready
+
+      at Object.<anonymous> (test/e2e/routing.test.ts:32:13)
+
+  console.log
+    ✓ Cleaned up test payments for: pix
+
+      at cleanupDatabase (test/e2e/fixtures.ts:189:13)
+
+  console.log
+    ✓ Cleaned up test payments for: pix
+
+      at cleanupDatabase (test/e2e/fixtures.ts:189:13)
+
+  console.log
+    Note: Message not received expected in test setup
+
+      at Object.<anonymous> (test/e2e/routing.test.ts:108:17)
+
+  console.log
+    ✓ Cleaned up test payments for: pix
+
+      at cleanupDatabase (test/e2e/fixtures.ts:189:13)
+
+  console.log
+    SPEI response: 201 {
+      payment_id: 'PMT-01KR6RMT0B9WGNA5K35JP35F08',
+      status: 'QUEUED',
+      created_at: '2026-05-09T16:20:34.955Z',
+      origin_rail: 'SPEI',
+      destination_rail: 'SPEI',
+      route_rule_applied: 'clabe_to_spei',
+      amount: 500,
+      currency: 'MXN',
+      trace_id: '01KR6RMT09AJXW0NQKS4SY1BH5',
+      fx: { source_currency: 'MXN' }
+    }
+
+      at Object.<anonymous> (test/e2e/routing.test.ts:120:15)
+
+  console.log
+    ✓ Cleaned up test payments for: spei
+
+      at cleanupDatabase (test/e2e/fixtures.ts:189:13)
+
+  console.log
+    Crossrail response: 201 {
+      payment_id: 'PMT-01KR6RMVJPMKCTNNQ3RXAF80NA',
+      status: 'QUEUED',
+      created_at: '2026-05-09T16:20:36.566Z',
+      origin_rail: 'PIX',
+      destination_rail: 'SPEI',
+      route_rule_applied: 'clabe_to_spei',
+      amount: 50,
+      currency: 'BRL',
+      trace_id: '01KR6RMVJMZBFYGK0EJG08B1RX',
+      fx: { source_currency: 'BRL' }
+    }
+
+      at Object.<anonymous> (test/e2e/routing.test.ts:144:15)
+
+  console.log
+    ✓ Cleaned up test payments for: crossrail
+
+      at cleanupDatabase (test/e2e/fixtures.ts:189:13)
+
+  console.log
+    Decimal response: 201 {
+      payment_id: 'PMT-01KR6RMX4RGAQR701A2QFY6DKM',
+      status: 'QUEUED',
+      created_at: '2026-05-09T16:20:38.168Z',
+      origin_rail: 'PIX',
+      destination_rail: 'PIX',
+      route_rule_applied: 'pix_key_to_pix',
+      amount: 123.45,
+      currency: 'BRL',
+      trace_id: '01KR6RMX4QWE97C20TJEC468H4',
+      fx: { source_currency: 'BRL' }
+    }
+
+      at Object.<anonymous> (test/e2e/routing.test.ts:179:15)
+
+  console.log
+    ✓ Cleaned up test payments for: pix
+
+      at cleanupDatabase (test/e2e/fixtures.ts:189:13)
+
+
+
+# stderr
+PASS test/e2e/routing.test.ts (13.839 s)
+  E2E: Routing & Happy Path
+    Basic API Acceptance
+      ✓ should accept a valid payment request (119 ms)
+      ✓ should return 400 on missing debtor alias (15 ms)
+      ✓ should return 400 on invalid amount negative (9 ms)
+    PIX Scenario Brazil to Brazil
+      ✓ should route BRL payment via PIX (1582 ms)
+      ✓ should publish payment message for PIX (5081 ms)
+    SPEI Scenario Mexico to Mexico
+      ✓ should route MXN payment via SPEI (1609 ms)
+    Cross-Rail Scenario Brazil to Mexico
+      ✓ should handle cross-border payment BRL to MXN (1592 ms)
+    Data Validation
+      ✓ should reject missing or invalid debtor alias structure (15 ms)
+      ✓ should preserve decimal precision (1580 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       9 passed, 9 total
+Snapshots:   0 total
+Time:        14.201 s
+Ran all test suites matching /test\/e2e\/routing.test.ts/i.
