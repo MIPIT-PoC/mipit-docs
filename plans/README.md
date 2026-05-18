@@ -1,10 +1,19 @@
-# Planes de remediación — Auditoría Claude 2026-05-16
+# Planes de remediación — Auditoría Claude
 
-Esta carpeta contiene 12 planes desacoplados para remediar los ~195 hallazgos de la auditoría profunda ejecutada el 2026-05-16. Cada plan es independiente, con `file:line` citations, tareas concretas, acceptance criteria y commits sugeridos.
+> **Update 2026-05-18**: agregada segunda generación de waves (Wave 5–8) tras la auditoría 2.
+> Ver sección **"Waves 5–8 — Post-Auditoría 2"** abajo.
 
-**Reportes raw**: ver `../AUDITORIA-PROFUNDA-MIPIT-2026-05-16.md` (índice) y `../AUDIT-RAW-{translation,adapters,ui-docs}.md` (detalle).
+Esta carpeta contiene:
+- **12 planes P01–P12** desacoplados de la primera auditoría (2026-05-16, ya implementados como Waves 1–4)
+- **4 plans de wave** (Wave 5 entregada, Wave 6 entregada, Wave 7/8 prospectivos) derivados de la auditoría 2 (2026-05-17)
 
-**Branch**: `Auditoria-Claude` creada en los 9 repos desde `master` (8 repos) y `main` (`mipit-adapter-breb`).
+Cada plan es independiente, con `file:line` citations, tareas concretas, acceptance criteria y commits sugeridos.
+
+**Reportes raw**:
+- Auditoría 1: `../audits/AUDITORIA-PROFUNDA-MIPIT-2026-05-16.md`
+- Auditoría 2: `../audits/AUDITORIA-2-2026-05-17.md` (más raw files en `../audits/raw/audit-2-2026-05-17/`)
+
+**Branch activa**: `Auditoria-Claude` en los 9 repos (desde `master`/`main`). Las branches efímeras `wave-N-*` no se usan — se commitea directo.
 
 ---
 
@@ -135,15 +144,56 @@ P04 (Bre-B) toca 4 repos. P07 (Observability) toca 5+. Para estos:
 
 ---
 
-## Estado actual (snapshot 2026-05-16)
+## Estado actual (snapshot 2026-05-18)
 
-- ✅ Branches creadas en los 9 repos
-- ✅ 12 planes escritos
-- ⏳ Implementación pendiente (decisión del usuario qué wave atacar primero)
+| Wave | Origen | Estado | Evidencia |
+|---|---|---|---|
+| 1 (P01+P06+P08+P09) | Auditoría 1 | ✅ Cerrada | `../evidence/wave-1-4-verification-2026-05-17-macos.md` |
+| 2 (P02+P03+P04) | Auditoría 1 | ✅ Cerrada | idem |
+| 3 (P05) | Auditoría 1 | ✅ Cerrada | idem |
+| 4 (P07+P10+P11+P12) | Auditoría 1 | ✅ Cerrada | idem |
+| **5** (Hardening pre-sustentación, 14 tickets) | Auditoría 2 Bloque A | ✅ Cerrada 2026-05-17 | `../evidence/wave-5-verification-2026-05-17.md` |
+| **6** (ISO 20022 spec compliance, 13 tickets) | Auditoría 2 Bloque B | ✅ Cerrada 2026-05-17 | `../evidence/wave-6-verification-2026-05-17.md` |
+| **7** (SoT + limpieza, 16 tickets) | Auditoría 2 Bloque D | ⏳ Planeada | [Wave-7-Single-Source-of-Truth-y-Limpieza.plan.md](Wave-7-Single-Source-of-Truth-y-Limpieza.plan.md) |
+| **8** (Production ready, 28 tickets) | Auditoría 2 Bloque C | ⏳ Planeada | [Wave-8-Production-Ready.plan.md](Wave-8-Production-Ready.plan.md) |
 
 ---
 
-## Notas finales
+## Waves 5–8 — Post-Auditoría 2
+
+Después de cerrar las Waves 1–4 ejecutamos la segunda auditoría (5 agentes paralelos, 88 hallazgos NUEVOS). El plan maestro de remediación está en [../audits/AUDITORIA-2-2026-05-17.md](../audits/AUDITORIA-2-2026-05-17.md) organizado en 4 bloques (A/B/C/D) que mapean a Waves 5/6/8/7 respectivamente.
+
+### Plans index
+
+| Wave | Plan | Estado | Tickets | Tiempo |
+|---|---|---|---|---|
+| 5 | [Wave-5 — Hardening Pre-Sustentación](Wave-5-Hardening-Pre-Sustentacion.plan.md) | ✅ Cerrada | 14 | ~3h |
+| 6 | [Wave-6 — ISO 20022 Spec Compliance](Wave-6-ISO20022-Spec-Compliance.plan.md) | ✅ Cerrada | 13 | ~3.5d entregado en 1 sesión |
+| 7 | [Wave-7 — SoT + Limpieza](Wave-7-Single-Source-of-Truth-y-Limpieza.plan.md) | ⏳ Planeada | 16 | ~1.5d |
+| 8 | [Wave-8 — Production Ready](Wave-8-Production-Ready.plan.md) | ⏳ Planeada | 28 | ~7-10d |
+
+### Orden recomendado de ejecución
+
+```
+Wave 5  (3h, pre-sustentación, prioridad MÁXIMA si demo está cerca)
+   ↓
+Wave 6  (3.5d, ISO compliance, prioridad ALTA — refuerza claim académico)
+   ↓
+Wave 7  (1.5d, limpieza, prioridad MEDIA — no bloquea sustentación)
+   ↓
+Wave 8  (7-10d, producción, prioridad BAJA — sólo si MIPIT continúa post-tesis)
+```
+
+### Notas de implementación Waves 5–6
+
+- Se commiteó directo a `Auditoria-Claude` (no se usaron branches separadas tipo `wave-5-hardening` — la primera versión las usó pero se decidió consolidar)
+- Tests ajustados al código, no al revés (regla del equipo)
+- Verificación live contra `docker compose` rebuilt: smoke 3/3 + curl assertions + DB queries
+- Cada Wave dejó un doc `evidence/wave-N-verification-2026-05-DD.md` con comandos exactos para reproducir
+
+---
+
+## Notas finales (Waves 1–4)
 
 1. **Wave 1 (P01+P08+P09) puede empezar inmediatamente**. Son foundation sin dependencias.
 2. **P02/P03/P04 paralelizables** una vez P01/P09 mergeados.
