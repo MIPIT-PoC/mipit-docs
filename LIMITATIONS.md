@@ -4,7 +4,8 @@
 > en su propio README. Esto NO es una hoja de bugs: son **decisiones conscientes** del scope de un
 > Proof of Concept de tesis, justificadas con la regulación o el costo de implementarlas a fondo.
 
-Fecha de corte: 2026-05-17 (post Wave 4).
+Fecha de corte: 2026-05-17 (Wave 6 actualización — agregadas secciones 11 y 12 con
+scope-outs adicionales identificados por la auditoría 2).
 
 ---
 
@@ -109,6 +110,33 @@ El PoC **no busca certificación** PCI-DSS, ISO 27001, ni cumplir directamente c
 - **Local:** `docker compose up -d` levanta ~16 contenedores (postgres, rabbitmq, jaeger, prometheus, grafana, alertmanager, core, 3 adapters, 3 mocks, ui).
 - **VM:** VM1 (infra) + VM2 (services). IPs y credenciales documentadas en `mipit-docs/demo-runbook/vm-demo.md`.
 - **Cloud:** No hay despliegue managed. Sin Helm/Kustomize, sin Terraform.
+
+---
+
+## 11. ISO 20022 — scope-outs identificados en Auditoría 2 (Wave 6)
+
+| Tema | Scope-out | Razón |
+|---|---|---|
+| **Pix Automático** (BCB Res. 304/2023, GA jun-2024) | Sin `RecurrentPaymentInformation` / `Frequency` / `PaymentMandate` en el canónico. | El PoC modela transferencias one-shot; recurring requiere mandate signing y un schema de schedule que multiplica el alcance. |
+| **Pix Garantido** | No modelado. | Es flujo crédito-comprador→garantizar-vendedor; comportamiento financiero específico, no técnico. |
+| **MED estructurado** (Mec. Especial de Devolução, BCB Res. 103/2021+215/2022) | Solo el enum `DEVOL` en el mock, sin SLA 80 días ni motivos FRAU/FAIL/REFD. | La devolución por compensación queda cubierta vía pacs.004 (W6.4); MED real requeriría un workflow regulado adicional. |
+| **DiMo** (Banxico oct-2024, SPEI por celular) | El adapter SPEI sólo emite `tipoCuentaBeneficiario=40` (CLABE); `=10` (Phone-linked) queda fuera. | El catálogo nacional DiMo y su API de resolución no son accesibles sin licencia bancaria. |
+| **TR-002 oficial Bre-B** | Los códigos `BREB001-005`, el formato exacto de `idTransaccion` y el OAuth flow son convenciones MIPIT-inventadas. W5.13/W6.7 corrigieron la documentación de esto; un sandbox real BanRep aceptaría formatos diferentes. | TR-002 v1.1 (oct-2025) aún no expone una spec REST pública. |
+| **Bre-B directorio (alias→PSP)** | Sin endpoint `GET /breb/v1/directorio/{llave}`. El core asume que `destination.ispb` ya está resuelto. | Análogo a `/v2/dict/{key}` PIX — requiere acceso al directorio central BanRep. |
+| **FedNow cross-border** | El traductor `canonical-to-fednow` lanza `TranslationError` si la currency no es USD (W6.10). | FedNow es USD-domestic-only per Federal Reserve OP §3.1; un on-ramp BRL→USD se debe completar antes (SPEI/SWIFT corresponsal). |
+| **camt.054 / camt.053** (DebitCreditNotification + Statement) | No emitidos. La reconciliación interna no consume extractos del operador. | En producción reemplazaría comparación interna con `camt.053`; fuera de scope académico. |
+| **`RgltryRptg` + threshold USD 10k** | Sin middleware que detecte y flagee transferencias regulatorias (BACEN Carta-Circular 3.598/2022, Banxico Circular 100/2019, SARLAFT CO). | Threshold detection sin sistema regulatorio downstream no agrega valor demostrable; documentado para que un panel financiero sepa que es escope futuro. |
+| **`IntrmyAgt1-3` / `UltmtDbtr` / `UltmtCdtr`** | No modelados. | Necesarios para correspondent banking ≥2 hops (BRL→USD→COP via corresponsal) y para PSPs SEDPE que actúan on-behalf-of usuarios finales (Nequi/Daviplata). El PoC cubre el caso ≤2-hops directo. |
+| **`ChrgsInf`** | Solo `ChrgBr` (quién paga), sin lista de cargos por agente. | PoC LATAM instantáneo defaulta a `SLEV`, donde el cargo es cero. |
+
+## 12. NACHA / SWIFT MT103 / ISO 20022 MX (rieles case-study)
+
+Estos rieles existen para **demostrar la extensibilidad** del canónico ISO 20022. NO tienen adaptador productivo
+ni mock, sólo el par `<rail>-to-canonical.ts` ↔ `canonical-to-<rail>.ts`. Wave 6 mejoró su fidelidad
+(LclInstrm, NACHA layout de 94 chars, MT103 chrgBr→detailsOfCharges) pero quedan como demostración.
+
+**No bloquea sustentación** que estos rieles no tengan adapter productivo — su valor académico es mostrar que
+agregar un nuevo riel al hub-and-spoke requiere sólo escribir dos funciones puras de traducción.
 
 ---
 

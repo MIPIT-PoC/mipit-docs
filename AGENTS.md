@@ -9,7 +9,7 @@ It is responsible for:
 - RabbitMQ message contracts (contracts/rabbitmq-messages.md),
 - Payment status state machine (contracts/payment-status-machine.md),
 - Error code catalog (contracts/error-codes.md),
-- Field mapping tables: PIX↔Canonical, SPEI↔Canonical (mappings/*.csv),
+- Canonical schema source-of-truth lives in `mipit-core/src/domain/models/canonical.ts` (Zod); ADR-002 documents the implemented pacs.008 subset,
 - Routing rule definitions (route-rules/),
 - Demo runbooks for local and VM environments (demo-runbook/),
 - Architecture overview and design documents (design/),

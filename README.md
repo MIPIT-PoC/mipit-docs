@@ -50,13 +50,19 @@ Este repositorio centraliza toda la documentación del PoC: especificaciones, de
 
 ### Mapeos
 
+> **Wave 6 (2026-05-17):** los archivos `mappings/canonical-fields.md` y los 4 CSV
+> describían un canónico flat antiguo que ya no existe (el modelo real es
+> pacs.008-derivado). Eliminados. La fuente de verdad del canónico es ahora
+> [`mipit-core/src/domain/models/canonical.ts`](../mipit-core/src/domain/models/canonical.ts)
+> (esquema Zod) y la documentación del subset implementado vive en
+> [`adrs/ADR-002-canonical-pacs008-json.md`](adrs/ADR-002-canonical-pacs008-json.md).
+
 | Archivo | Contenido |
 |---------|-----------|
-| [`mappings/canonical-fields.md`](mappings/canonical-fields.md) | Campos canónicos: tipos, validaciones, obligatoriedad |
-| [`mappings/pix-to-canonical.csv`](mappings/pix-to-canonical.csv) | Mapeo PIX → Modelo canónico |
-| [`mappings/canonical-to-pix.csv`](mappings/canonical-to-pix.csv) | Mapeo Modelo canónico → PIX |
-| [`mappings/spei-to-canonical.csv`](mappings/spei-to-canonical.csv) | Mapeo SPEI → Modelo canónico |
-| [`mappings/canonical-to-spei.csv`](mappings/canonical-to-spei.csv) | Mapeo Modelo canónico → SPEI |
+| [`adrs/ADR-002-canonical-pacs008-json.md`](adrs/ADR-002-canonical-pacs008-json.md) | Subset pacs.008.001.10 implementado + limitaciones |
+| [`../mipit-core/src/domain/models/canonical.ts`](../mipit-core/src/domain/models/canonical.ts) | Esquema Zod del canónico (fuente única) |
+| [`../mipit-core/src/translation/*-to-canonical.ts`](../mipit-core/src/translation/) | Traductores rail → canónico |
+| [`../mipit-core/src/translation/canonical-to-*.ts`](../mipit-core/src/translation/) | Traductores canónico → rail |
 
 ### Reglas de enrutamiento
 
