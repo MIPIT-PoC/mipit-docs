@@ -57,8 +57,8 @@ Desde la UI o desde la API (`mipit-testkit/tools/smoke-test.sh` lo hace en un co
 | 1 | PIX → SPEI    | BRL→MXN | `PIX-+5511999887766`         | `SPEI-012180001234567899` |
 | 2 | SPEI → PIX    | MXN→BRL | `SPEI-987654321098765437`    | `PIX-fernanda.pereira.br` |
 | 3 | PIX → BRE_B   | BRL→COP | `PIX-+5521999887766`         | `BREB-+573001234567`      |
-| 4 | BRE_B → PIX   | COP→BRL | `BREB-@helena.medellin`      | `PIX-12345678901`         |
-| 5 | SPEI → BRE_B  | MXN→COP | `SPEI-012180001234567899`    | `BREB-900123456-1`        |
+| 4 | BRE_B → PIX   | COP→BRL | `BREB-@helena.medellin`      | `PIX-12345678909`         |
+| 5 | SPEI → BRE_B  | MXN→COP | `SPEI-012180001234567899`    | `BREB-900123456-8`        |
 | 6 | BRE_B → SPEI  | COP→MXN | `BREB-+573670859027`         | `SPEI-987654321098765437` |
 
 > **Nota P10:** todos los alias arriba usan checksums **válidos** (CPF mod-11, CLABE mod-10, NIT mod-11). El generator `mipit-testkit/generators/utils.ts` produce muestras infinitas.
