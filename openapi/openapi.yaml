@@ -262,48 +262,121 @@ paths:
         '200':
           description: Batch compensation report
 
-  /translate/canonical-to/{rail}:
+  # Audit 3 X4 — Endpoints de traducción REALES (no fantasma).
+  # Quitados: POST /translate/canonical-to/{rail} y POST /translate/from/{rail}
+  # nunca existieron en Fastify. Source of truth: mipit-core/src/api/routes/translate.ts
+  /translate:
     post:
       tags: [translate]
-      summary: Traducir canónico → formato nativo del riel
-      operationId: translateCanonicalTo
-      parameters:
-        - name: rail
-          in: path
-          required: true
-          schema:
-            type: string
-            enum: [PIX, SPEI, BRE_B, SWIFT_MT103, ISO20022_MX, ACH_NACHA, FEDNOW]
+      summary: Traducir payload entre 2 rieles cualesquiera (sin enviar al rail)
+      description: |
+        Convierte un payload de su formato nativo (sourceRail) al formato del
+        destino (destinationRail), pasando por el canónico pacs.008 internamente.
+        Devuelve `canonical` + `translated`. NO publica al rail.
+      operationId: translate
       requestBody:
         required: true
         content:
           application/json:
-            schema: { $ref: '#/components/schemas/CanonicalPacs008' }
+            schema:
+              type: object
+              required: [sourceRail, destinationRail, payload]
+              properties:
+                sourceRail:      { type: string, enum: [PIX, SPEI, BRE_B, SWIFT_MT103, ISO20022_MX, ACH_NACHA, FEDNOW] }
+                destinationRail: { type: string, enum: [PIX, SPEI, BRE_B, SWIFT_MT103, ISO20022_MX, ACH_NACHA, FEDNOW] }
+                payload:         { type: object, description: "Payload nativo del sourceRail" }
+                options:
+                  type: object
+                  properties:
+                    paymentId:        { type: string }
+                    includeCanonical: { type: boolean, default: true }
       responses:
         '200':
-          description: Rail-native payload
+          description: Traducción exitosa (canonical + translated + paymentId + traceId)
           content:
             application/json:
-              schema: { type: object }
+              schema:
+                type: object
+                properties:
+                  paymentId:       { type: string }
+                  sourceRail:      { type: string }
+                  destinationRail: { type: string }
+                  canonical:       { $ref: '#/components/schemas/CanonicalPacs008' }
+                  translated:      { type: object }
+                  translatedAt:    { type: string, format: date-time }
+                  traceId:         { type: string }
+        '400':
+          description: sourceRail = destinationRail (o request inválido)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '422':
+          description: TranslationError (currency cross-border en FedNow, CLABE inválida, etc.)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
 
-  /translate/from/{rail}:
+  /translate/rails:
+    get:
+      tags: [translate]
+      summary: Listar rieles soportados + metadata
+      operationId: listTranslateRails
+      responses:
+        '200':
+          description: Lista de rails
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  rails:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:       { type: string }
+                        name:     { type: string }
+                        country:  { type: string }
+                        currency: { type: string }
+                  totalRails: { type: integer }
+
+  /translate/preview:
     post:
       tags: [translate]
-      summary: Traducir formato nativo del riel → canónico
-      operationId: translateFromRail
-      parameters:
-        - name: rail
-          in: path
-          required: true
-          schema:
-            type: string
-            enum: [PIX, SPEI, BRE_B, SWIFT_MT103, ISO20022_MX, ACH_NACHA, FEDNOW]
+      summary: Traducir canónico desde un rail a TODOS los otros (preview UI)
+      description: |
+        Útil para la página /translator de la UI: recibe payload nativo del
+        sourceRail y devuelve `translations[destRail] = { success, data | error }`
+        para cada uno de los otros rieles (allSettled, sin abortar al primer error).
+      operationId: translatePreview
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sourceRail, payload]
+              properties:
+                sourceRail: { type: string, enum: [PIX, SPEI, BRE_B, SWIFT_MT103, ISO20022_MX, ACH_NACHA, FEDNOW] }
+                payload:    { type: object }
       responses:
         '200':
-          description: Canonical pacs.008 envelope
+          description: Preview multi-rail
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/CanonicalPacs008' }
+              schema:
+                type: object
+                properties:
+                  paymentId:    { type: string }
+                  canonical:    { $ref: '#/components/schemas/CanonicalPacs008' }
+                  translations:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        success: { type: boolean }
+                        data:    { type: object, nullable: true }
+                        error:   { type: string, nullable: true }
 
   /analytics/throughput:
     get:

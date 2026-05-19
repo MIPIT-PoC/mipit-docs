@@ -140,6 +140,22 @@ agregar un nuevo riel al hub-and-spoke requiere sólo escribir dos funciones pur
 
 ---
 
+## 13. Audit 3 (2026-05-18) — claim-drift cerrado declarativamente
+
+Wave 6 declaró cerrados estos dos tickets, pero la Auditoría 3 (B1-003, B1-004) detectó que el código
+real no implementa todo lo declarado. Sin código nuevo, documentamos honestamente el estado verdadero:
+
+| Ticket | Lo que dijo Wave 6 | Estado real (Audit 3) | Por qué no se completa ahora |
+|---|---|---|---|
+| **W6.3 `ctgyPurp` end-to-end** | "agrega `canonical.ctgyPurp`; SPEI mapper deriva `tipoPago` (CASH→1, SALA→5, TAXS→14...)". | El schema + tabla de mapping existen y el SPEI mapper sí lee `canonical.ctgyPurp`. Pero **ningún translator emite el campo** (`pix-to-canonical`, `spei-to-canonical`, `breb-to-canonical`, `iso20022-mx-to-canonical` no escriben `ctgyPurp`) y la API request schema no lo acepta. Resultado: SPEI siempre cae al fallback `tipoPago=1` (CASH). Las filas SALA→5 / TAXS→14 son scaffolding muerto. | Emitirlo end-to-end requiere extender los 4 traductores + extender `createPaymentSchema` + ampliar tests; estimado 2h. Queda en Wave 7 backlog. La defensa académica es: la **arquitectura** está lista (el tipo, el mapping, el consumer) y un riel cualquiera puede empezar a emitirlo sin cambios estructurales. |
+| **W6.4 pacs.004 persistido** | "compensation-service construye + persiste pacs.004 real (RtrId, OrgnlEndToEndId, OrgnlUETR, RtrdIntrBkSttlmAmt, RtrRsnInf)". | El código construye el pacs.004 correctamente (schema en `canonical/pacs004.schema.ts`, helper en `compensation-service.ts`). Pero la "persistencia" es **sub-objeto JSON dentro de `audit_events.detail`**, no una tabla/columna dedicada. No hay endpoint `GET /payments/:id/pacs004` ni columna `payments.pacs004_envelope`. | Una migration nueva pre-sustentación introduce riesgo de regresión sin valor demostrable; el envelope es **observable** via `GET /payments/:id/audit-events` y eso es lo que un panel revisaría. Si se necesitara persistencia dedicada, agregar columna JSONB + GIN index es trabajo de 30 min en Wave 7. |
+
+Esto es **honestidad académica**: cerrar el claim sin reescribir el código, documentando exactamente qué está
+en `Auditoria-Claude` y qué requeriría trabajo adicional. Las dos limitaciones son detectables en revisión de
+código y se reconocen explícitamente.
+
+---
+
 ## 10. Qué *sí* demuestra el PoC
 
 A pesar de las limitaciones, el PoC entrega evidencia funcional de:
